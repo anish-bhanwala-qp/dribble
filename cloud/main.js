@@ -715,13 +715,6 @@ Parse.Cloud.define("tournamentDetails", function(request, response) {
                                                     response.error("Error fetching matches");
                                                 }
                                             });
-                                            response.success({
-                                                tournament: tournament,
-                                                groups: groups,
-                                                teams: teams,
-                                                matches: matches,
-                                                players: players
-                                            });
                                         }, error: function(obj, error) {
                                             response.error("Error fetching matches");
                                         }
