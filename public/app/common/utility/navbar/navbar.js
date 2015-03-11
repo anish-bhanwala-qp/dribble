@@ -24,7 +24,7 @@
 				},
 			    link: function (scope, element, attrs, ctrls) {
 			    scope.myType = getNavbarType(attrs.type);
-			    scope.headerText = attrs.headerText || 'Dribble';
+			    scope.headerText = attrs.headerText || 'Dribble 2015';
 			    scope.showSignIn = angular.isDefined(attrs.signInCallback);
 			    scope.isAdmin = angular.isDefined(attrs.isAdmin);
 			    scope.isCaptain = angular.isDefined(attrs.isCaptain) && attrs.isCaptain == 'true';

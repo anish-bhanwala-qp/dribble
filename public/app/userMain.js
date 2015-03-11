@@ -87,6 +87,8 @@
 
                                     getMatchLineups(false);
                                     getMatchGuests(false);
+                                    populateMatchEventsPlayerNames(data.result.matchEvents, data.result.players);
+                                    populateMatchEvents($scope.data.matches, data.result.matchEvents);
                                 }).error(function(data) {
                                     toaster.pop('error', data.error);
                                     console.log(data);
@@ -180,6 +182,35 @@
                                 }
                             });
                         });
+                    }
+
+                    function populateMatchEventsPlayerNames(matchEvents, players) {
+                        for (var i=0; i < matchEvents.length; i++) {
+                            var event = matchEvents[i];
+                            var events = [];
+                            for (var j=0; j < players.length; j++) {
+                                var player = players[j];
+                                if (event.playerId.objectId == player.objectId) {
+                                    event.playerName = player.name;
+                                    event.teamId = player.teamId.objectId;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    function populateMatchEvents(matches, matchEvents) {
+                        for (var i=0; i < matches.length; i++) {
+                            var match = matches[i];
+                            var events = [];
+                            for (var j=0; j < matchEvents.length; j++) {
+                                var event = matchEvents[j];
+                                if (event.matchId.objectId == match.objectId) {
+                                    events.push(event);
+                                }
+                            }
+                            match.events = events;
+                        }
                     }
 
                     $scope.matchSelected = function() {

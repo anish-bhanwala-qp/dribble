@@ -117,6 +117,7 @@
                             var player = players[j];
                             if (event.playerId.objectId == player.objectId) {
                                 event.playerName = player.name;
+                                event.teamId = player.teamId.objectId;
                                 break;
                             }
                         }

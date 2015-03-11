@@ -5,15 +5,36 @@
                 <td colspan="3"><h4>{{date.toDateString().replace('2015','')}}</h4></td>
             </tr>
             <tr ng-repeat="match in data.matches | dateFilter:date">
-                <td width="33%" class="text-left">{{match.team1Name}}</td>
+                <td width="33%" class="text-left">
+                    {{match.team1Name}}
+                    <div ng-if="match.events.length > 0">
+                        <div ng-repeat="event in match.events | filter:match.team1Id.objectId">
+                            <small>
+                                {{event.playerName}}
+                                <span ng-switch on="event.type">
+                                    <i class="fa fa-futbol-o" ng-switch-when="Goal"></i>
+                                    <i class="fa fa-square" style="color: #EAE24E;" ng-switch-when="Yellow Card"></i>
+                                    <i class="fa fa-square" style="color: #BD1010;" ng-switch-when="Red Card"></i>
+                                </span>
+                            </small>
+                        </div>
+                    </div>
+                </td>
                 <td width="33%" class="text-center">
                     {{match.status == 'Over' ? (match.team1Score + ' - ' + match.team2Score) : (match.matchDateTime | formatParseDate)}}
                 </td>
                 <td width="33%" class="text-right">
                     {{match.team2Name}}
                     <div ng-if="match.events.length > 0">
-                        <div ng-repeat="event in match.events">
-                            <small>{{event.playerName + ' ' + event.type}}</small>
+                        <div ng-repeat="event in match.events | filter:match.team2Id.objectId">
+                            <small>
+                                {{event.playerName}}
+                                <span ng-switch on="event.type">
+                                    <i class="fa fa-futbol-o" ng-switch-when="Goal"></i>
+                                    <i class="fa fa-square" style="color: #EAE24E;" ng-switch-when="Yellow Card"></i>
+                                    <i class="fa fa-square" style="color: #BD1010;" ng-switch-when="Red Card"></i>
+                                </span>
+                            </small>
                         </div>
                     </div>
                 </td>

@@ -5,7 +5,7 @@
                 function($scope, toaster, tournamentService, $modalInstance, tournament, team) {
                     //All the initialization should go inside init function
                     $scope.data = {
-                        players:''
+                        players: []
                     };
                     $scope.submitted = false;
 
@@ -61,8 +61,8 @@
                         return selectedPlayers;
                     }
 
-                    function csvToJSON(csv){
-                        var lines = csv.split("\n");
+                    function csvToJSON(lines){
+                        //var lines = csv.split("\n");
                         var result = [];
                         var headers = ['name', 'phone', 'email'];
 
