@@ -26,7 +26,7 @@
                     $scope.user;
                     $scope.guestError = false;
                     $scope.data = {
-			matchDates: [],
+                        matchDates: [],
                         tournament: {},
                         groups: [],
                         teams: [],
@@ -155,22 +155,22 @@
                     }
 
                     function populateTeamNames(matches, teams) {
-			$scope.data.matchDates.length = 0;
+                        $scope.data.matchDates.length = 0;
                         angular.forEach(matches, function(match) {
-			    match.dateTime = new Date(match.matchDateTime.iso);
-			    var dateTemp = new Date(match.matchDateTime.iso);
-			    dateTemp.setHours(0,0,0,0);
-			    match.dateOnly = dateTemp;
-			    var found = false;
-			    for (var i=0; i < $scope.data.matchDates.length; i++) {
-				if ($scope.data.matchDates[i].getTime() == match.dateOnly.getTime()) {
-				    found = true;
-				    break;
-				}
-			    }
-			    if (!found) {
-				$scope.data.matchDates.push(match.dateOnly);
-			    }
+                            match.dateTime = new Date(match.matchDateTime.iso);
+                            var dateTemp = new Date(match.matchDateTime.iso);
+                            dateTemp.setHours(0,0,0,0);
+                            match.dateOnly = dateTemp;
+                            var found = false;
+                            for (var i=0; i < $scope.data.matchDates.length; i++) {
+                                if ($scope.data.matchDates[i].getTime() == match.dateOnly.getTime()) {
+                                    found = true;
+                                    break;
+                                }
+                            }
+                            if (!found) {
+                                $scope.data.matchDates.push(match.dateOnly);
+                            }
                             angular.forEach(teams, function(team) {
                                 if (match.team1Id.objectId == team.objectId) {
                                     match.team1Name = team.name;
@@ -196,7 +196,10 @@
 
                             $scope.data.selectedMatchGuest.length = 0;
                             for (var i=0; i < $scope.data.myGuests.length; i++) {
-                                $scope.data.selectedMatchGuest.push($scope.data.myGuests[i]);
+                                var guest = $scope.data.myGuests[i];
+                                if (guest.matchId.objectId == $scope.data.match.objectId) {
+                                    $scope.data.selectedMatchGuest.push(guest);
+                                }
                             }
                         } else {
                             $scope.data.selectedMatchLineup.length = 0;
@@ -212,7 +215,9 @@
                     $scope.editMatchGuest = function() {
                         $scope.data.editMatchGuest.length = 0;
                         for (var i=0; i < $scope.data.selectedMatchGuest.length; i++) {
-                            $scope.data.editMatchGuest.push($scope.data.selectedMatchGuest[i].name);
+                            var tempGuest = $scope.data.selectedMatchGuest[i];
+                            $scope.data.editMatchGuest.push(tempGuest.name +
+                                ',' + tempGuest.phone + ',' + tempGuest.email);
                         }
                     }
 
@@ -298,14 +303,26 @@
                     };
 
                     $scope.submitGuest = function(form) {
-                        for (var i=0; i < $scope.data.editMatchGuest.length; i++) {
-                            var name = $scope.data.editMatchGuest[i];
-                            for (var j=0; j < $scope.data.editMatchGuest.length; j++) {
-                                var otherName = $scope.data.editMatchGuest[j];
-                                if (i != j && name == otherName) {
-                                    $scope.guestError = true;
-                                    return;
+                        var guests = csvToJSON($scope.data.editMatchGuest);
+                        if (guests.length == 0) {
+                            toaster.pop('error', 'Please enter at least one guest');
+                            return;
+                        }
+
+                        for (var i=0; i < guests.length; i++) {
+                            var guestTemp = guests[i];
+                            var name = guestTemp.name.toUpperCase();
+                            if (guestTemp.name && guestTemp.phone && guestTemp.email) {
+                                for (var j=0; j < guests.length; j++) {
+                                    var otherName = guests[j].name.toUpperCase();
+                                    if (i != j && name == otherName) {
+                                        toaster.pop('error', 'Duplicate names are not allowed');
+                                        return;
+                                    }
                                 }
+                            } else {
+                                toaster.pop('error', 'Name/phone/email missing at row ' + (i + 1));
+                                return;
                             }
                         }
 
@@ -314,9 +331,9 @@
                         for (var i=0; i < $scope.data.selectedMatchGuest.length; i++) {
                             var alreadySelectedGuest = $scope.data.selectedMatchGuest[i];
                             var found = false;
-                            for (var j=0; j < $scope.data.editMatchGuest.length; j++) {
-                                var guestTemp = $scope.data.editMatchGuest[j];
-                                if (guestTemp == alreadySelectedGuest.name) {
+                            for (var j=0; j < guests.length; j++) {
+                                var guestTemp = guests[j];
+                                if (guestTemp.name.toUpperCase() == alreadySelectedGuest.name.toUpperCase()) {
                                     found = true;
                                     break;
                                 }
@@ -333,12 +350,12 @@
                         }
 
                         var newGuests = [];
-                        for (var i=0; i < $scope.data.editMatchGuest.length; i++) {
-                            var  guestTemp = $scope.data.editMatchGuest[i];
+                        for (var i=0; i < guests.length; i++) {
+                            var  guestTemp = guests[i];
                             var found = false;
                             for (var j=0; j < $scope.data.selectedMatchGuest.length; j++) {
                                 var alreadySelectedGuest = $scope.data.selectedMatchGuest[j];
-                                if (guestTemp == alreadySelectedGuest.name) {
+                                if (guestTemp.name.toUpperCase() == alreadySelectedGuest.name.toUpperCase()) {
                                     found = true;
                                     break;
                                 }
@@ -386,6 +403,105 @@
                                     toaster.pop('error', data.error);
                                 });
                         }
+                    };
+
+                    $scope.showAddMyPlayer = function() {
+                        var modalInstance = $modal.open({
+                            templateUrl: 'add-my-player-tpl.html',
+                            controller: 'AddMyPlayerController',
+                            size: 'sm',
+                            resolve: {
+                                tournament: function() {
+                                    return $scope.data.tournament;
+                                },
+                                toaster: function() {
+                                    return toaster
+                                },
+                                tournamentService: function() {
+                                    return tournamentService;
+                                },
+                                team: function() {
+                                    return $scope.data.myTeam;
+                                },
+                                myPlayers: function() {
+                                    return $scope.data.myPlayers;
+                                }
+                            }
+                        });
+
+                        modalInstance.result.then(function(player) {
+                            $scope.data.players.push(player);
+                            $scope.data.myPlayers.push(player);
+                        });
+                    };
+
+                    function csvToJSON(lines){
+                        var result = [];
+                        var headers = ['name', 'phone', 'email'];
+
+                        for (var i=0; i < lines.length; i++) {
+                            var obj = {};
+                            var currentLine = lines[i].split(",");
+
+                            for(var j=0; j <headers.length; j++){
+                                var val = currentLine[j] ? currentLine[j].trim() : currentLine[j];
+                                if (j == 1) {
+                                    obj[headers[j]] = (val ? parseInt(val) : 0);
+                                } else {
+                                    obj[headers[j]] = val;
+                                }
+                            }
+                            result.push(obj);
+                        }
+                        return result;
+                    }
+                }])
+        .controller('AddMyPlayerController',
+            ['$scope', 'toaster', 'tournamentService', '$modalInstance', 'tournament', 'team', 'myPlayers',
+                function($scope, toaster, tournamentService, $modalInstance, tournament, team, myPlayers) {
+                    //All the initialization should go inside init function
+                    $scope.data = {
+                        player: {}
+                    };
+                    $scope.submitted = false;
+
+                    $scope.submitAddMyPlayer = function(form) {
+                        $scope.submitted = true;
+                        for (var i=0; i < myPlayers.length; i++) {
+                            var tempPlayer = myPlayers[i];
+                            if (tempPlayer.name.toUpperCase() == $scope.data.player.name.toUpperCase()) {
+                                toaster.pop('error', 'Player with same name already exists');
+                                return;
+                            }
+                            if (tempPlayer.email.toUpperCase() == $scope.data.player.email.toUpperCase()) {
+                                toaster.pop('error', 'Player with same email already exists');
+                                return;
+                            }
+                        }
+                        if (form.$valid) {
+                            tournamentService.addPlayer(tournament, team, $scope.data.player)
+                                .success(function(data) {
+                                    toaster.pop('success', 'Player added successfully!');
+                                    $modalInstance.close(data.result);
+                                })
+                                .error(function(data) {
+                                    toaster.pop('error', data.error);
+                                    $modalInstance.dismiss('cancel');
+                                });
+                        } else {
+                            toaster.pop('info', 'Please make sure all values are filled properly');
+                        }
+                    };
+
+                    $scope.showValidationMessage = function(form, field) {
+                        if (form && field) {
+                            return ($scope.submitted || field.$dirty) && field.$invalid;
+                        }
+                        return false;
+                    };
+
+                    $scope.cancel = function() {
+                        $modalInstance.dismiss('cancel');
                     };
                 }]);
 })();

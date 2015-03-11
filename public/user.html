@@ -81,6 +81,8 @@
                                ng-if="data.selectedMatchLineup.length > 0">
                             <tr ng-repeat="player in data.selectedMatchLineup">
                                 <td>{{player.name}}</td>
+                                <td>{{player.phone}}</td>
+                                <td>{{player.email}}</td>
                             </tr>
                         </table>
                     </db-field-label>
@@ -124,24 +126,34 @@
                                ng-if="data.selectedMatchGuest.length > 0">
                             <tr ng-repeat="guest in data.selectedMatchGuest">
                                 <td>{{guest.name}}</td>
+                                <td>{{guest.phone}}</td>
+                                <td>{{guest.email}}</td>
                             </tr>
                         </table>
                     </db-field-label>
 
                     <form name="matchGuestForm" ng-if="data.match.objectId">
                         <div class="form-group" ng-if="data.editGuest">
-                            <label>Add/Edit Guests</label>
+                            <label>Add/Edit Guests
+                                <div>One per line. <small>Values separated by comma (,)</small></div>
+                            </label>
                             <textarea name="guests"
                                       ng-model="data.editMatchGuest"
-                                      rows="15"
+                                      rows="6"
                                       id="guestID"
                                       class="form-control"
                                       ng-list="&#10;"
                                       ng-trim="false"
                                       required></textarea>
-			    <span ng-if="guestError" class="text-danger">
-                                Duplicate names are not allowed
-                            </span>
+                            <div>
+                                <span><b>Format: </b> <i>Full name, Phone number, Email address</i></span>
+                                <div><b>For example: </b>
+                                    <ul>
+                                        <li>Ram Lakshman Bharathi,9999999999,ramlakshman.b@gmail.com</li>
+                                        <li>Anish Bhanwala,8888888888,anish.bhanwala@gmail.com</li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                         <div>
                             <button type="button"
@@ -165,17 +177,69 @@
 
     <div class="panel panel-default">
         <div class="panel-heading">
-            <div class="panel-title">
-                My Players
+            <div class="row">
+                <div class="col-xs-5">
+                    <div class="panel-title">My Players</div>
+                </div>
+                <div class="col-xs-7 text-right">
+                    <button class="btn btn-success btn-xs" ng-click="showAddMyPlayer()">
+                        <span class="fa fa-plus"></span> Add Player
+                    </button>
+                </div>
             </div>
         </div>
 
         <table class="table table-condensed table-striped">
             <tr ng-repeat="player in data.myPlayers">
                 <td>{{player.name}}</td>
+                <td>{{player.phone}}</td>
+                <td>{{player.email}}</td>
             </tr>
         </table>
     </div>
+</script>
+
+<script type="text/ng-template" id="add-my-player-tpl.html">
+    <form class="form-horizontal1" name="playerForm" ng-submit="submitAddMyPlayer(playerForm)" novalidate>
+        <div class="modal-header">
+            <button type="button" class="close" ng-click="cancel()" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Add Player</h4>
+        </div>
+        <div class="modal-body">
+            <db-field-label label="Name" label-for="playerNameID" field="playerForm.name" orientation="vertical">
+                <input class="form-control" type="text" name="name" ng-model="data.player.name" id="playerNameID" required>
+                <span ng-show="showValidationMessage(playerForm, playerForm.name)" class="text-danger">
+                    Name is required
+                </span>
+            </db-field-label>
+            <db-field-label label="Phone Number" label-for="playerPhoneID" field="playerForm.phone" orientation="vertical">
+                <input class="form-control" type="number" name="phone" ng-model="data.player.phone" id="playerPhoneID" min="1000000000" max="9999999999" required>
+                <span ng-show="showValidationMessage(playerForm, playerForm.phone) && playerForm.phone.$error.required"
+                      class="text-danger">
+                    Phone is required
+                </span>
+                <span ng-show="showValidationMessage(playerForm, playerForm.phone) && (playerForm.phone.$error.min || playerForm.phone.$error.max || playerForm.phone.$error.number)"
+                      class="text-danger">
+                    Not valid number!
+                </span>
+            </db-field-label>
+            <db-field-label label="Email" label-for="playerEmailID" field="playerForm.email" orientation="vertical">
+                <input class="form-control" type="email" name="email" ng-model="data.player.email" id="playerEmailID" required>
+                <span ng-show="showValidationMessage(playerForm, playerForm.email) && playerForm.email.$error.required"
+                      class="text-danger">
+                    Email is required
+                </span>
+                <span ng-show="showValidationMessage(playerForm, playerForm.email) && playerForm.email.$error.email"
+                      class="text-danger">
+                    Not valid email!
+                </span>
+            </db-field-label>
+        </div>
+        <div class="modal-footer">
+            <button type="button" ng-click="cancel()" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary">Add Player</button>
+        </div>
+    </form>
 </script>
 
 </body>

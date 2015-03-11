@@ -2,6 +2,45 @@ Parse.Cloud.define("hello", function(request, response) {
   response.success("Hello world!");
 });
 
+Parse.Cloud.define("addPlayer", function(request, response) {
+    if (Parse.User.current()) {
+        var Tournament = Parse.Object.extend("Tournament");
+        var query = new Parse.Query(Tournament);
+        query.get(request.params.tournamentId, {
+            success: function(tournament) {
+                var queryTeam = new Parse.Query(Parse.Object.extend("Team"));
+                queryTeam.get(request.params.teamId, {
+                    success: function(team) {
+                        var Player = Parse.Object.extend("Player");
+                        var myPlayer = new Player();
+                        myPlayer.set("tournamentId", tournament);
+                        myPlayer.set("teamId", team);
+                        myPlayer.set("name", request.params.player.name);
+                        myPlayer.set("phone", request.params.player.phone);
+                        myPlayer.set("email", request.params.player.email);
+                        myPlayer.save(null, {
+                            success: function(newPlayer) {
+                                response.success(newPlayer);
+                            },
+                            error: function(obj, error) {
+                                response.error(error);
+                            }
+                        });
+                    },
+                    error: function(obj, error) {
+                        response.error(error);
+                    }
+                });
+            },
+            error: function(error) {
+                response.error('Error adding Player');
+            }
+        });
+    } else {
+        response.error('Session Expired');
+    }
+});
+
 Parse.Cloud.define("matchGuests", function(request, response) {
     var queryMatchGuest = new Parse.Query(Parse.Object.extend("MatchGuest"));
     queryMatchGuest.find({
@@ -50,7 +89,9 @@ Parse.Cloud.define("addGuests", function(request, response) {
 		    var myGuest = new MatchGuest();
 		    myGuest.set("matchId", request.params.match);
 		    myGuest.set("teamId", request.params.team);
-		    myGuest.set("name", guest);
+		    myGuest.set("name", guest.name);
+            myGuest.set("phone", guest.phone);
+            myGuest.set("email", guest.email);
 		    myGuest.save(null, {
 			    success: function(newGuest) {
 				newGuests.push(newGuest);
