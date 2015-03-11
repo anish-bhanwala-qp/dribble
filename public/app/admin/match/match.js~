@@ -1,0 +1,55 @@
+(function(){
+    angular.module('dribble')
+        .controller('MatchController',
+		    ['$scope', 'toaster', 'tournamentService', '$modalInstance', 'tournament', 'teams',
+		     function($scope, toaster, tournamentService, $modalInstance, tournament, teams) {
+			    //All the initialization should go inside init function
+			    $scope.match = {
+				team1: {},
+				team2: {},
+				matchDateTime: new Date(),
+				stage: 'Group'
+			    };
+			    $scope.teams;
+			    $scope.submitted = false;
+
+			    $scope.init = function() {
+				$scope.teams = teams;
+			    }
+
+			    $scope.init();
+
+			    $scope.submit = function(form) {
+				$scope.submitted = true;
+				if (form.$valid && $scope.match.team1.objectId && $scope.match.team2.objectId) {
+				    tournamentService.addMatch(tournament,
+							       $scope.match.team1,
+							       $scope.match.team2,
+							       $scope.match.matchDateTime.getTime(),
+							       $scope.match.stage,
+							       'Scheduled')
+					.success(function(data, status) {
+						toaster.pop('success', 'Match added successfully!');
+						$modalInstance.close(data.result);
+					    })
+					.error(function(data, status) {
+						toaster.pop('error', data.error);
+						$modalInstance.dismiss('cancel');
+					    });
+				} else {
+				    alert('Please make sure all values are filled properly');
+				}
+			    };
+
+			    $scope.showValidationMessage = function(form, field) {
+				if (form && field) {
+				    return ($scope.submitted || field.$dirty) && field.$invalid;
+				}
+				return false;
+			    };
+
+			    $scope.cancel = function() {
+				$modalInstance.dismiss('cancel');
+			    };
+			}]);
+})();

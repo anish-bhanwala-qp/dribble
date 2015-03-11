@@ -1,0 +1,26 @@
+<form class="form-horizontal1" name="playerForm" ng-submit="submit(playerForm)" novalidate>
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="cancel()" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Add Players</h4>
+    </div>
+    <div class="modal-body">
+        <db-field-label label="Enter player names (one per line)" label-for="playersID" field="playerForm.players" orientation="vertical">
+            <textarea name="players"
+                      ng-model="data.players"
+                      rows="15"
+                      id="playersID"
+                      class="form-control"
+                      ng-list="&#10;"
+                      ng-trim="false"
+                      required>
+            </textarea>
+            <span ng-show="showValidationMessage(playerForm, playerForm.players)" class="text-danger">
+                Enter at least one player name without any special character
+            </span>
+        </db-field-label>
+    </div>
+    <div class="modal-footer">
+        <button type="button" ng-click="cancel()" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary">Add Players</button>
+    </div>
+</form>

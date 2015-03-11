@@ -1,0 +1,44 @@
+(function(){
+    angular.module('dribble')
+        .controller('LoginController', ['$scope', '$modalInstance', 'userService', 'toaster', '$window', '$timeout',
+					function($scope, $modalInstance, userService, toaster, $window, $timeout) {
+			    //All the initialization should go inside init function
+			    $scope.user = {
+				username: '',
+				password: ''
+			    }
+
+			    $scope.submitted = false;
+
+			    $scope.submit = function(form) {
+				$scope.submitted = true;
+				if (form.$valid) {
+				    userService.login($scope.user.username, $scope.user.password)
+					.success(function(data, status) {
+						toaster.pop('success', 'Signed in successfully!');
+						$timeout(function() {
+							var url = data.result.isAdmin ? '/admin.html' : '/user.html';
+							url += '#token=' + data.result.sessionToken;
+							$window.location.href = url;
+						    }, 500)
+						    }).
+					error(function(data, status) {
+						toaster.pop('error', 'Authentication Failed')
+						    });;
+				}
+			    };
+
+			    $scope.showValidationMessage = function(form, field) {
+				if (form && field) {
+				    return ($scope.submitted || field.$dirty) && field.$invalid;
+				}
+				return false;
+			    };
+
+			    $scope.cancel = function() {
+				$modalInstance.dismiss('cancel');
+			    };
+
+
+			}]);
+})();

@@ -1,0 +1,46 @@
+<div class="navbar navbar-fixed-top" ng-class="myType" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".fixed-top-bar-items">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">{{headerText}}</a>
+        </div>
+
+        <div class="collapse navbar-collapse fixed-top-bar-items">
+            <ul class="nav navbar-nav">
+                <li ng-class="getCssClass('matches')">
+                    <a ui-sref="matches" ng-click="selectTab('matches')">Matches</a>
+                </li>
+                <li ng-class="getCssClass('table')">
+                    <a ui-sref="table" ng-click="selectTab('table')">Table</a>
+                </li>
+                <li ng-class="getCssClass('stats')">
+                    <a ui-sref="stats" ng-click="selectTab('stats')">Stats</a>
+                </li>
+                <!--<li ng-class="getCssClass('about')">
+                    <a ui-sref="about" ng-click="selectTab('about')">About</a>
+                </li>-->
+                <li ng-if="isAdmin" ng-class="getCssClass('admin')">
+                    <a ui-sref="admin" ng-click="selectTab('admin')">Admin</a>
+                </li>
+            </ul>
+	        <div ng-show="showSignIn" class="nav navbar-nav navbar-right" style="margin-right: 0px;">
+                <button type="button" class="btn btn-default navbar-btn" ng-click="signInCallback()">Sign in</button>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .navbar .navbar-nav {
+        display: inline-block;
+        float: none;
+    }
+
+    .navbar .navbar-collapse {
+        text-align: center;
+    }
+</style>

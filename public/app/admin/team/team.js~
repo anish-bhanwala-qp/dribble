@@ -1,0 +1,33 @@
+(function(){
+    angular.module('dribble')
+        .controller('AddTeamController', ['$scope', 'tournamentService', function($scope, tournamentService) {
+            $scope.team = {
+                name: '',
+                startDate: new Date(),
+                endDate: new Date(),
+		tournamentId: ''
+            };
+
+            $scope.tournaments;
+
+            $scope.init = function() {
+
+            };
+
+            $scope.init();
+
+            $scope.submit = function() {
+                if ($scope.teamForm.$valid) {
+                    alert('valid');
+                } else {
+                    alert('invalid');
+                }
+
+                return;
+            };
+
+            $scope.showValidationMessage = function(form, field) {
+                return (field.$dirty && field.$invalid);
+            };
+        }]);
+})();

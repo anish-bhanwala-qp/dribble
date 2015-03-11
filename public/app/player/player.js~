@@ -1,0 +1,40 @@
+(function(){
+    angular.module('dribble')
+        .controller('AddPlayerController',
+		    ['$scope', 'toaster', 'tournamentService', '$modalInstance', 'tournament', 'team',
+		     function($scope, toaster, tournamentService, $modalInstance, tournament, team) {
+			    //All the initialization should go inside init function
+			    $scope.data = {
+				players:[]
+			    };
+			    $scope.submitted = false;
+
+			    $scope.submit = function(form) {
+				$scope.submitted = true;
+				if (form.$valid && $scope.data.players.length > 0) {
+				    tournamentService.addPlayer(tournament, team, $scope.data.players)
+					.success(function(data, status) {
+						toaster.pop('info', 'Adding Players, refresh page to view added players.');
+						$modalInstance.close(data.result);
+					    })
+					.error(function(data, status) {
+						toaster.pop('error', data.error);
+						$modalInstance.dismiss('cancel');
+					    });
+				} else {
+				    alert('Please make sure all values are filled properly');
+				}
+			    };
+
+			    $scope.showValidationMessage = function(form, field) {
+				if (form && field) {
+				    return ($scope.submitted || field.$dirty) && field.$invalid;
+				}
+				return false;
+			    };
+
+			    $scope.cancel = function() {
+				$modalInstance.dismiss('cancel');
+			    };
+			}]);
+})();

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html ng-app="dribble">
+<head>
+    <title>Dribble 2015</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="css/bootstrap-theme.min.css" rel="stylesheet"/>
+    <link href="css/font-awesome.min.css" rel="stylesheet"/>
+    <link href="css/bootstrap-switch.min.css" rel="stylesheet"/>
+    <link href="css/toaster.min.css" rel="stylesheet"/>
+    <link href="css/angular-busy.min.css" rel="stylesheet"/>
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/angular.min.js"></script>
+    <script src="js/angular-animate.min.js"></script>
+    <script src="js/angular-ui-router.min.js"></script>
+    <script src="js/angular-route.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap-switch.min.js"></script>
+    <script src="js/toaster.min.js"></script>
+    <script src="js/angular-busy.min.js"></script>
+
+    <!----------------------Common components------------------------->
+    <script src="app/common/utility/commonUtil.js"></script>
+    <script src="app/common/utility/button/button.js"></script>
+    <script src="app/common/utility/section/section.js"></script>
+    <script src="app/common/utility/navbar/navbar.js"></script>
+    <script src="app/common/utility/navbarSection/navbarSection.js"></script>
+    <script src="app/common/utility/fieldLabel/fieldLabel.js"></script>
+    <script src="app/common/utility/modal/modal.js"></script>
+    <script src="app/common/utility/alertMessage/alertMessage.js"></script>
+    <script src="app/common/utility/switch/switch.js"></script>
+    <script src="app/common/utility/submit/submit.js"></script>
+
+    <!----------------------App components------------------------->
+    <script src="app/userMain.js"></script>
+    <script src="app/player/player.js"></script>
+    <script src="app/user/user.js"></script>
+    <Script src="app/user/userService.js"></script>
+    <script src="app/table/tableService.js"></script>
+    <script src="app/tournament/tournamentService.js"></script>
+</head>
+<body ng-controller="MainController" style="padding-top: 60px;">
+
+<db-navbar is-captain="true"></db-navbar>
+
+<div class="container-fluid" ui-view></div>
+
+<div cg-busy="myPromise"></div>
+<toaster-container></toaster-container>
+
+<script type="text/ng-template" id="my-team-tpl.html">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title">Match Lineup</div>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-6 col-lg-6 col-xs-12 col-md-6 col-sm-offset-3 col-lg-offset-3 col-md-offset-3">
+                    <db-field-label label="Select Match" label-for="matchID" orientation="vertical">
+                        <select name="matchId"
+                                class="form-control input-sm"
+                                id="matchID"
+                                ng-change="matchSelected()"
+                                ng-model="data.match"
+                                ng-options="(match.team1Name + ' VS ' + match.team2Name) for match in (data.matches | filter:data.myTeam.name | filter:'Scheduled') track by match.objectId">
+                            <option value="">None</option>
+                        </select>
+                    </db-field-label>
+                </div>
+            </div>
+            <div class="row" ng-if="data.match.objectId">
+                <div class="col-sm-6 col-md-6 col-lg-6">
+                    <db-field-label label="Lineup"
+                                    label-for="matchLineupViewID"
+                                    orientation="vertical">
+                        <span ng-if="data.selectedMatchLineup.length == 0">
+                            No players added to lineup
+                        </span>
+                        <table class="table table-condensed table-striped table-bordered"
+                               ng-if="data.selectedMatchLineup.length > 0">
+                            <tr ng-repeat="player in data.selectedMatchLineup">
+                                <td>{{player.name}}</td>
+                            </tr>
+                        </table>
+                    </db-field-label>
+
+                    <form name="matchLineupForm" ng-if="data.match.objectId">
+                        <div class="form-group" ng-if="data.editLineup">
+                            <label>Add/Edit Lineup</label>
+                            <select multiple
+                                    size="16"
+                                    ng-disabled="!data.editLineup"
+                                    class="form-control input-sm"
+                                    ng-model="data.editMatchLineup"
+                                    ng-options="player.name for player in data.myPlayers track by player.objectId">
+                                <option value="">None</option>
+                            </select>
+                        </div>
+                        <div>
+                            <button type="button"
+                                    ng-if="!data.editLineup"
+                                    class="btn btn-xs btn-primary"
+                                    ng-click="data.editLineup = !data.editLineup; editMatchLineup()">Edit lineup</button>
+                            <button type="button"
+                                    ng-if="data.editLineup"
+                                    class="btn btn-xs btn-default"
+                                    ng-click="data.editLineup = !data.editLineup">Cancel</button>
+                            <button type="submit"
+                                    ng-if="data.editLineup"
+                                    class="btn btn-sm btn-success"
+                                    ng-click="submit(matchLineupForm)">Save</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-sm-6 col-md-6 col-lg-6">
+                    <db-field-label label="Guests"
+                                    label-for="matchGuestViewID"
+                                    orientation="vertical">
+                        <span ng-if="data.selectedMatchGuest.length == 0">
+                            No Guests added
+                        </span>
+                        <table class="table table-condensed table-striped table-bordered"
+                               ng-if="data.selectedMatchGuest.length > 0">
+                            <tr ng-repeat="guest in data.selectedMatchGuest">
+                                <td>{{guest.name}}</td>
+                            </tr>
+                        </table>
+                    </db-field-label>
+
+                    <form name="matchGuestForm" ng-if="data.match.objectId">
+                        <div class="form-group" ng-if="data.editGuest">
+                            <label>Add/Edit Guests</label>
+                            <textarea name="guests"
+                                      ng-model="data.editMatchGuest"
+                                      rows="15"
+                                      id="guestID"
+                                      class="form-control"
+                                      ng-list="&#10;"
+                                      ng-trim="false"
+                                      required></textarea>
+			    <span ng-if="guestError" class="text-danger">
+                                Duplicate names are not allowed
+                            </span>
+                        </div>
+                        <div>
+                            <button type="button"
+                                    ng-if="!data.editGuest"
+                                    class="btn btn-xs btn-primary"
+                                    ng-click="data.editGuest = !data.editGuest; editMatchGuest()">Edit Guest</button>
+                            <button type="button"
+                                    ng-if="data.editGuest"
+                                    class="btn btn-xs btn-default"
+                                    ng-click="data.editGuest = !data.editGuest">Cancel</button>
+                            <button type="submit"
+                                    ng-if="data.editGuest"
+                                    class="btn btn-sm btn-success"
+                                    ng-click="submitGuest(matchGuestForm)">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title">
+                My Players
+            </div>
+        </div>
+
+        <table class="table table-condensed table-striped">
+            <tr ng-repeat="player in data.myPlayers">
+                <td>{{player.name}}</td>
+            </tr>
+        </table>
+    </div>
+</script>
+
+</body>
+</html>

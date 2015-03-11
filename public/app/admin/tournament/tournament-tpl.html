@@ -1,0 +1,32 @@
+<div ng-controller="AddTournamentController">
+    <db-section type="primary"
+                header-text="Tournament"
+                icon-type="fa-checkered">
+        <form class="form-horizontal" name="tournamentForm" novalidate>
+            <db-field-label label="Name" label-for="tournamentNameID" field="tournamentForm.name">
+                <input type="text"
+                       name="name"
+                       class="form-control input-sm"
+                       id="tournamentNameID"
+                       ng-model="tournament.name"
+                       required>
+                <div ng-show="showValidationMessage(tournamentForm, tournamentForm.name)">
+                    Name is required field
+                </div>
+            </db-field-label>
+
+            <db-field-label label="Start Date"
+                            label-for="startDateID"
+                            field="tournamentForm.startDate">
+                <input type="date"
+                       name="startDate"
+                       class="form-control input-sm"
+                       id="startDate"
+                       ng-model="tournament.startDate"
+                       required>
+            </db-field-label>
+
+            <input type="submit"  class="btn btn-success" value="Submit" ng-click="submit(tournamentForm)">
+        </form>
+    </db-section>
+</div>

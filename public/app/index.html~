@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html ng-app="dribble">
+<head>
+    <title>Dribble 2015</title>
+    <link href="/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="/css/bootstrap-theme.min.css" rel="stylesheet"/>
+    <link href="/css/font-awesome.min.css" rel="stylesheet"/>
+    <link href="/css/bootstrap-switch.min.css" rel="stylesheet"/>
+
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/angular.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/bootstrap-switch.min.js"></script>
+
+    <!----------------------Common components------------------------->
+    <script src="common/utility/commonUtil.js"></script>
+    <script src="common/utility/button/button.js"></script>
+    <script src="common/utility/section/section.js"></script>
+    <script src="common/utility/navbar/navbar.js"></script>
+    <script src="common/utility/navbarSection/navbarSection.js"></script>
+    <script src="common/utility/fieldLabel/fieldLabel.js"></script>
+    <script src="common/utility/modal/modal.js"></script>
+    <script src="common/utility/alertMessage/alertMessage.js"></script>
+    <script src="common/utility/switch/switch.js"></script>
+    <script src="common/utility/submit/submit.js"></script>
+
+    <!----------------------App components------------------------->
+    <script src="main.js"></script>
+    <script src="admin/tournament/tournament.js"></script>
+    <script src="admin/tournament/tournamentService.js"></script>
+    <script src="admin/team/team.js"></script>
+    <script src="admin/team/teamService.js"></script>
+</head>
+<body ng-controller="MainController">
+
+<db-navbar></db-navbar>
+
+<div ng-include="'admin/tournament/tournament-tpl.html'"></div>
+<div ng-include="'admin/team/add-team-tpl.html'"></div>
+
+<div id="alertMessageID"
+     align="center"
+     ng-show="alertMessageShow"
+     style="z-index: 5000; position: fixed; margin-left: 15%; text-align: center; margin-right: 15%; width: 70%; overflow: hidden;">
+    <div ng-class="alertMessageClass">
+        {{alertMessageText}}
+        <span class="pull-right" onclick="$('#alertMessageID').hide();">
+            <i class="fa fa-times"></i>
+        </span>
+    </div>
+</div>
+
+<style>
+    .alert-success {
+        background-color: #58b55c;
+        color: #ffffff;
+        margin-bottom: 20px;
+        border: 1px solid transparent;
+    }
+
+    .alert-danger {
+        margin-bottom: 20px;
+        border: 1px solid transparent;
+        background-color: #db584e !important;
+        color: #ffffff !important;
+    }
+
+    body {
+        padding-top: 60px;;
+    }
+</style>
+
+</body>
+</html>

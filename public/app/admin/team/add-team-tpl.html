@@ -1,0 +1,23 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title">Add Team</h4>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal1" name="teamForm" novalidate>
+        <db-field-label label="Name" label-for="nameID" field="teamForm.name" orientation="vertical">
+            <input type="text"
+                   name="name"
+                   class="form-control input-sm"
+                   id="nameID"
+                   ng-model="team.name"
+                   required>
+            <span ng-show="showValidationMessage(teamForm, teamForm.name)" class="text-danger">
+                Name is required
+            </span>
+        </db-field-label>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" ng-click="cancel()" class="btn btn-default" data-dismiss="modal">Cancel</button>
+    <button type="submit" ng-click="submit(teamForm)" class="btn btn-primary">Add Team</button>
+</div>

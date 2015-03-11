@@ -1,0 +1,392 @@
+(function(){
+    angular.module('dribble', ['dribble.utility', 'toaster', 'cgBusy', 'ui.router', 'ngRoute'])
+        .config(function($stateProvider, $urlRouterProvider) {
+            $urlRouterProvider.otherwise('/myTeam');
+            $stateProvider
+                .state('myTeam', {
+                    url: '/myTeam',
+                    templateUrl: 'my-team-tpl.html'
+                })
+                .state('matches', {
+                    url: '/matches',
+                    templateUrl: 'app/match/matches-tpl.html'
+                })
+                .state('table', {
+                    url: '/table',
+                    templateUrl: 'app/table/table-tpl.html'
+                })
+                .state('stats', {
+                    url: '/stats',
+                    templateUrl: 'app/stats/stats-tpl.html'
+                });
+        })
+        .controller('MainController',
+            ['$scope', 'userService', 'tournamentService', 'toaster', '$modal', 'tableService', '$timeout',
+                function($scope, userService, tournamentService, toaster, $modal, tableService, $timeout) {
+                    $scope.user;
+                    $scope.guestError = false;
+                    $scope.data = {
+			matchDates: [],
+                        tournament: {},
+                        groups: [],
+                        teams: [],
+                        matches: [],
+                        players: [],
+                        matchEvents: [],
+                        myTeam: {},
+                        myPlayers: [],
+                        group: {},
+                        table: [],
+                        match: {},
+                        myLineups: [],
+                        myGuests: [],
+                        selectedMatchLineup: [],
+                        selectedMatchGuest: [],
+                        editMatchLineup: [],
+                        editMatchGuest: [],
+                        editLineup: false,
+                        editGuest: false
+                    };
+
+                    $scope.init = function() {
+                        $scope.user = userService.getAuthenticatedUser(getParameterByName('token'));
+                        tournamentService.getAll()
+                            .success(function(data) {
+                                console.log(data);
+                                $scope.tournaments = data.result;
+                                if ($scope.tournaments.length > 0) {
+                                    $scope.data.tournament = $scope.tournaments[0];
+                                    $scope.tournamentSelected();
+                                }
+                            }).error(function(data) {
+                                console.log(data);
+                            });
+                    }
+
+                    $scope.init();
+
+                    $scope.tournamentSelected = function() {
+                        if ($scope.data.tournament) {
+                            tournamentService.getData($scope.data.tournament)
+                                .success(function(data) {
+                                    updateArray($scope.data.teams, data.result.teams);
+                                    updateArray($scope.data.groups, data.result.groups);
+                                    updateArray($scope.data.matches, data.result.matches);
+                                    updateArray($scope.data.players, data.result.players);
+                                    updateArray($scope.data.matchEvents, data.result.matchEvents);
+
+                                    populateTeamNames($scope.data.matches, $scope.data.teams);
+
+                                    $scope.data.myTeam = getUserTeam($scope.user, $scope.data.teams);
+                                    updateArray($scope.data.myPlayers,
+                                        getTeamPlayers($scope.user.teamId.objectId, data.result.players))
+                                    $scope.data.table.length = 0;
+                                    $scope.data.table.push.apply($scope.data.table,
+                                        tableService.calculateTable($scope.data));
+
+                                    getMatchLineups(false);
+                                    getMatchGuests(false);
+                                }).error(function(data) {
+                                    toaster.pop('error', data.error);
+                                    console.log(data);
+                                });
+                        }
+                    }
+
+                    function getMatchLineups(isMatchSelected) {
+                        tournamentService.getAllMatchLineup($scope.data.myTeam)
+                            .success(function(data) {
+                                updateArray($scope.data.myLineups, data.result);
+                                if (isMatchSelected) {
+                                    $scope.matchSelected();
+                                }
+                            })
+                            .error(function(data) {
+                                toaster.pop('error', data.error);
+                            });
+                    }
+
+                    function getMatchGuests(isMatchSelected) {
+                        $scope.data.myGuests.length = 0;
+                        tournamentService.getAllMatchGuests($scope.data.myTeam)
+                            .success(function(data) {
+                                updateArray($scope.data.myGuests, data.result);
+                                if (isMatchSelected) {
+                                    $scope.matchSelected();
+                                }
+                            })
+                            .error(function(data) {
+                                toaster.pop('error', data.error);
+                            });
+                    }
+
+                    function getParameterByName(name) {
+                        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+                        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                            results = regex.exec(location.search);
+                        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+                    }
+
+                    function updateArray(oldArray, newArray) {
+                        if (oldArray) {
+                            oldArray.length = 0;
+                            oldArray.push.apply(oldArray, newArray);
+                        } else {
+                            oldArray = newArray;
+                        }
+                    }
+
+                    function getUserTeam(user, teams) {
+                        for (var i=0; i < teams.length; i++) {
+                            if (teams[i].objectId == user.teamId.objectId) {
+                                return teams[i];
+                            }
+                        }
+                    }
+
+                    function getTeamPlayers(teamId, players) {
+                        var selectedPlayers = [];
+                        angular.forEach(players, function(player) {
+                            if (player.teamId.objectId == teamId) {
+                                selectedPlayers.push(player);
+                            }
+                        });
+                        return selectedPlayers;
+                    }
+
+                    function populateTeamNames(matches, teams) {
+			$scope.data.matchDates.length = 0;
+                        angular.forEach(matches, function(match) {
+			    match.dateTime = new Date(match.matchDateTime.iso);
+			    var dateTemp = new Date(match.matchDateTime.iso);
+			    dateTemp.setHours(0,0,0,0);
+			    match.dateOnly = dateTemp;
+			    var found = false;
+			    for (var i=0; i < $scope.data.matchDates.length; i++) {
+				if ($scope.data.matchDates[i].getTime() == match.dateOnly.getTime()) {
+				    found = true;
+				    break;
+				}
+			    }
+			    if (!found) {
+				$scope.data.matchDates.push(match.dateOnly);
+			    }
+                            angular.forEach(teams, function(team) {
+                                if (match.team1Id.objectId == team.objectId) {
+                                    match.team1Name = team.name;
+                                } else if (match.team2Id.objectId == team.objectId) {
+                                    match.team2Name = team.name;
+                                }
+                            });
+                        });
+                    }
+
+                    $scope.matchSelected = function() {
+                        if ($scope.data.match) {
+                            $scope.data.selectedMatchLineup.length = 0;
+                            angular.forEach($scope.data.myLineups, function(lineup) {
+                                if (lineup.matchId.objectId == $scope.data.match.objectId) {
+                                    angular.forEach($scope.data.myPlayers, function(player) {
+                                        if (lineup.playerId.objectId == player.objectId) {
+                                            $scope.data.selectedMatchLineup.push(player);
+                                        }
+                                    });
+                                }
+                            });
+
+                            $scope.data.selectedMatchGuest.length = 0;
+                            for (var i=0; i < $scope.data.myGuests.length; i++) {
+                                $scope.data.selectedMatchGuest.push($scope.data.myGuests[i]);
+                            }
+                        } else {
+                            $scope.data.selectedMatchLineup.length = 0;
+                        }
+                    }
+
+                    $scope.editMatchLineup = function() {
+                        $scope.data.editMatchLineup.length = 0;
+                        $scope.data.editMatchLineup.push.apply($scope.data.editMatchLineup,
+                            $scope.data.selectedMatchLineup);
+                    }
+
+                    $scope.editMatchGuest = function() {
+                        $scope.data.editMatchGuest.length = 0;
+                        for (var i=0; i < $scope.data.selectedMatchGuest.length; i++) {
+                            $scope.data.editMatchGuest.push($scope.data.selectedMatchGuest[i].name);
+                        }
+                    }
+
+
+                    $scope.submit = function(form) {
+                        $scope.data.editLineup = false;
+                        var deletedMatchLineups = [];
+                        for (var i=0; i < $scope.data.selectedMatchLineup.length; i++) {
+                            var alreadySelectedPlayer = $scope.data.selectedMatchLineup[i];
+                            var found = false;
+                            for (var j=0; j < $scope.data.editMatchLineup.length; j++) {
+                                var playerTemp = $scope.data.editMatchLineup[j];
+                                if (playerTemp.objectId == alreadySelectedPlayer.objectId) {
+                                    found = true;
+                                    break;
+                                }
+                            }
+                            if (!found) {
+                                for (var k=0; k < $scope.data.myLineups.length; k++) {
+                                    var lineup = $scope.data.myLineups[k];
+                                    if (lineup.matchId.objectId == $scope.data.match.objectId
+                                        && lineup.playerId.objectId == alreadySelectedPlayer.objectId) {
+                                        deletedMatchLineups.push(lineup);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                        var newPlayers = [];
+                        for (var i=0; i < $scope.data.editMatchLineup.length; i++) {
+                            var  playerTemp = $scope.data.editMatchLineup[i];
+                            var found = false;
+                            for (var j=0; j < $scope.data.selectedMatchLineup.length; j++) {
+                                var alreadySelectedPlayer = $scope.data.selectedMatchLineup[j];
+                                if (playerTemp.objectId == alreadySelectedPlayer.objectId) {
+                                    found = true;
+                                    break;
+                                }
+                            }
+                            if (!found) {
+                                newPlayers.push(playerTemp);
+                            }
+                        }
+
+                        toaster.pop('info', 'Updating Match Lineup');
+                        if (deletedMatchLineups.length > 0) {
+                            tournamentService.deletePlayerFromMatchLineup(deletedMatchLineups)
+                                .success(function(data, status) {
+                                    if (newPlayers.length > 0) {
+                                        tournamentService.addPlayerToMatchLineup($scope.data.myTeam,
+                                                $scope.data.match, newPlayers)
+                                            .success(function(data, status) {
+                                                toaster.pop('success', 'MatchLineup updated successfully');
+                                                $timeout(function() {
+                                                    getMatchLineups(true);
+                                                }, 500);
+                                            })
+                                            .error(function(data, status) {
+                                                toaster.pop('error', data.error);
+                                            });
+
+                                    } else {
+
+                                    }
+                                })
+                                .error(function(data, status) {
+                                    toaster.pop('error', data.error);
+                                });
+                        } else if (newPlayers.length > 0) {
+                            tournamentService.addPlayerToMatchLineup($scope.data.myTeam,
+                                    $scope.data.match, newPlayers)
+                                .success(function(data, status) {
+                                    toaster.pop('success', 'MatchLineup updated successfully');
+                                    $timeout(function() {
+                                        getMatchLineups(true);
+                                    }, 500);
+                                })
+                                .error(function(data, status) {
+                                    toaster.pop('error', data.error);
+                                });
+                        }
+                    };
+
+                    $scope.submitGuest = function(form) {
+                        for (var i=0; i < $scope.data.editMatchGuest.length; i++) {
+                            var name = $scope.data.editMatchGuest[i];
+                            for (var j=0; j < $scope.data.editMatchGuest.length; j++) {
+                                var otherName = $scope.data.editMatchGuest[j];
+                                if (i != j && name == otherName) {
+                                    $scope.guestError = true;
+                                    return;
+                                }
+                            }
+                        }
+
+                        $scope.data.editGuest = false;
+                        var deletedGuests = [];
+                        for (var i=0; i < $scope.data.selectedMatchGuest.length; i++) {
+                            var alreadySelectedGuest = $scope.data.selectedMatchGuest[i];
+                            var found = false;
+                            for (var j=0; j < $scope.data.editMatchGuest.length; j++) {
+                                var guestTemp = $scope.data.editMatchGuest[j];
+                                if (guestTemp == alreadySelectedGuest.name) {
+                                    found = true;
+                                    break;
+                                }
+                            }
+                            if (!found) {
+                                for (var j=0; j < $scope.data.selectedMatchGuest.length; j++) {
+                                    var guestTemp = $scope.data.selectedMatchGuest[j];
+                                    if (guestTemp == alreadySelectedGuest.name) {
+                                        deletedGuests.push(guestTemp)
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                        var newGuests = [];
+                        for (var i=0; i < $scope.data.editMatchGuest.length; i++) {
+                            var  guestTemp = $scope.data.editMatchGuest[i];
+                            var found = false;
+                            for (var j=0; j < $scope.data.selectedMatchGuest.length; j++) {
+                                var alreadySelectedGuest = $scope.data.selectedMatchGuest[j];
+                                if (guestTemp == alreadySelectedGuest.name) {
+                                    found = true;
+                                    break;
+                                }
+                            }
+                            if (!found) {
+                                newGuests.push(guestTemp);
+                            }
+                        }
+
+                        $scope.data.editMatchGuest.length = 0;
+                        toaster.pop('info', 'Updating Guests');
+                        if (deletedGuests.length > 0) {
+                            tournamentService.deleteGuests(deletedGuests)
+                                .success(function(data, status) {
+                                    if (newGuests.length > 0) {
+                                        tournamentService.addGuests($scope.data.myTeam,
+                                                $scope.data.match, newGuests)
+                                            .success(function(data, status) {
+                                                toaster.pop('success', 'Guests updated successfully');
+                                                $timeout(function() {
+                                                    getMatchGuests(true);
+                                                }, 500);
+                                            })
+                                            .error(function(data, status) {
+                                                toaster.pop('error', data.error);
+                                            });
+
+                                    } else {
+
+                                    }
+                                })
+                                .error(function(data, status) {
+                                    toaster.pop('error', data.error);
+                                });
+                        } else if (newGuests.length > 0) {
+                            tournamentService.addGuests($scope.data.myTeam,
+                                    $scope.data.match, newGuests)
+                                .success(function(data, status) {
+                                    toaster.pop('success', 'Guests updated successfully');
+                                    $timeout(function() {
+                                        getMatchGuests(true);
+                                    }, 500);
+                                })
+                                .error(function(data, status) {
+                                    toaster.pop('error', data.error);
+                                });
+                        }
+                    };
+                }]);
+})();
+

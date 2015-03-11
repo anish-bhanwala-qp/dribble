@@ -1,0 +1,25 @@
+<div ng-if="subSection">
+    <div class="panel-heading">
+        <h4 style="margin:0;">
+            <span ng-if="iconType">
+                <i class="fa {{iconType}}"></i>
+            </span>
+            {{headerText}}
+        </h4>
+    </div>
+
+    <div ng-show="isSwitchSection == true ? switchProperty : true" ng-transclude></div>
+    <hr>
+</div>
+
+<div ng-if="!subSection" class="panel {{myType}}">
+    <div class="panel-heading">
+        <h4 style="margin:0;">
+            <span ng-if="iconType">
+                <i class="fa {{iconType}}"></i>
+            </span>
+            {{headerText}}
+        </h4>
+    </div>
+    <div class="panel-body" ng-transclude></div>
+</div>

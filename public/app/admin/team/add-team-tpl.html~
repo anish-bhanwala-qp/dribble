@@ -1,0 +1,32 @@
+<div ng-controller="AddTeamController">
+    <db-section type="primary"
+                header-text="Add Team"
+                icon-type="fa-checkered">
+        <form class="form-horizontal" name="teamForm" novalidate>
+            <db-field-label label="Name" label-for="teamNameID" field="teamForm.name">
+                <input type="text"
+                       name="name"
+                       class="form-control input-sm"
+                       id="teamNameID"
+                       ng-model="team.name"
+                       required>
+                <span ng-show="showValidationMessage(teamForm, teamForm.name)" class="text-danger">
+                    Name is required field
+                </span>
+            </db-field-label>
+
+	    <db-field-label label="Tournament" label-for="tournamentID" field="teamForm.tournamentId">
+                <select name="tournamentId"
+                        class="form-control input-sm"
+                        id="tournamentID"
+                        required
+                        ng-model="team.tournamentId"
+                        ng-options="tournament.name for tournament in tournaments track by tournament.objectId">
+                    <option value="">None</option>
+                </select>
+            </db-field-label>
+
+            <db-submit callback="submit()"></db-submit>
+        </form>
+    </db-section>
+</div>

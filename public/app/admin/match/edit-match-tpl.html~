@@ -1,0 +1,153 @@
+<form class="form-horizontal1" name="matchForm" ng-submit="submit(matchForm)" novalidate>
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="cancel()" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Update Match</h4>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-xs-6">
+                <db-field-label label="{{match.team1Name + ' Score'}}" label-for="team1ScoreID" field="matchForm.team1Score" orientation="vertical">
+                    <select name="team1Score"
+                            class="form-control input-sm"
+                            id="team1Score"
+                            ng-model="match.team1Score"
+                            ng-options="score for score in scores"
+                            required>
+                        <option value="">None</option>
+                    </select>
+                    <span ng-show="showValidationMessage(matchForm, matchForm.team1Score)" class="text-danger">
+                        Score is required
+                    </span>
+                </db-field-label>
+            </div>
+            <div class="col-xs-6">
+                <db-field-label label="{{match.team2Name + ' Score'}}" label-for="team2ScoreID" field="matchForm.team2Score" orientation="vertical">
+                    <select name="team2Score"
+                            class="form-control input-sm"
+                            id="team2Score"
+                            ng-model="match.team2Score"
+                            ng-options="score for score in scores"
+                            required>
+                        <option value="">None</option>
+                    </select>
+                    <span ng-show="showValidationMessage(matchForm, matchForm.team2Score)" class="text-danger">
+                        Score is required
+                    </span>
+                </db-field-label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-6">
+                <db-field-label label="Status" label-for="statusID" field="matchForm.status" orientation="vertical">
+                    <select name="status"
+                            class="form-control input-sm"
+                            id="statusID"
+                            ng-model="match.status"
+                            required>
+                        <option value="">None</option>
+                        <option value="Scheduled">Scheduled</option>
+                        <option value="Over">Over</option>
+                    </select>
+                    <span ng-show="showValidationMessage(matchForm, matchForm.status)" class="text-danger">
+                        Status is required
+                    </span>
+                </db-field-label>
+            </div>
+            <div class="col-xs-6">
+                <db-field-label label="Stage" label-for="stageID" field="matchForm.stage" orientation="vertical">
+                    <select name="stage"
+                            class="form-control input-sm"
+                            id="stageID"
+                            ng-model="match.stage"
+                            required>
+                        <option value="Group">Group</option>
+                        <option value="QuarterFinal">Quarter Final</option>
+                        <option value="SemiFinal">SemiFinal</option>
+                        <option value="Final">Final</option>
+                    </select>
+                    <span ng-show="showValidationMessage(matchForm, matchForm.stage)" class="text-danger">
+                        Stage is required
+                    </span>
+                </db-field-label>
+            </div>
+        </div>
+
+
+        <db-field-label label="Match Date/Time" label-for="matchDateTimeID" field="matchForm.matchDateTime" orientation="vertical">
+            <input type="datetime-local"
+                   id="matchDateTimeID"
+                   name="matchDateTime"
+                   ng-model="match.matchDateTime"
+                   placeholder="yyyy-MM-ddTHH:mm:ss"
+                   required/>
+            <span ng-show="showValidationMessage(matchForm, matchForm.matchDateTime)" class="text-danger">
+                Match Date/Time is required
+            </span>
+        </db-field-label>
+
+
+        <div class="row">
+            <div class="col-xs-8">
+                <h4><u>Match Events</u></h4>
+            </div>
+            <div class="col-xs-4">
+                <div align="right">
+                    <button type="button" class="btn btn-sm btn-info" ng-click="addMatchEvent()">Add Event</button>
+                </div>
+            </div>
+        </div>
+
+        <div ng-repeat="event in match.matchEvents">
+            <div class="row">
+                <div class="col-sm-3">
+                    <db-field-label label="player" orientation="vertical">
+                        <select name="player"
+                                class="form-control input-sm"
+                                ng-model="event.playerId"
+                                ng-options="player.name for player in players track by player.objectId"
+                                required>
+                            <option value="">None</option>
+                        </select>
+                        <span ng-show="showValidationMessage(matchForm, matchForm.player)" class="text-danger">
+                            Player is required
+                        </span>
+                    </db-field-label>
+                </div>
+                <div class="col-sm-3">
+                    <db-field-label label="Type" orientation="vertical">
+                        <select name="eventType"
+                                class="form-control input-sm"
+                                ng-model="event.type"
+                                ng-options="type for type in types"
+                                required>
+                            <option value="">None</option>
+                        </select>
+                        <span ng-show="matchForm.$submitted && matchForm.eventType.$error.required" class="text-danger">required</span>
+                    </db-field-label>
+                </div>
+                <div class="col-sm-3">
+                    <db-field-label label="Time" orientation="vertical">
+                        <select name="eventTime"
+                                class="form-control input-sm"
+                                ng-model="event.time"
+                                ng-options="minute for minute in minutes"
+                                required>
+                            <option value="">None</option>
+                        </select>
+                        <span ng-show="matchForm.$submitted && matchForm.eventTime.$error.required" class="text-danger">required</span>
+                    </db-field-label>
+                </div>
+                <div class="col-sm-3">
+                    <db-field-label label="" orientation="vertical">
+                        <a href="#" ng-click="deleteMatchEvent($index)" class="text-danger">delete</a>
+                    </db-field-label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" ng-click="cancel()" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary">Update</button>
+    </div>
+</form>

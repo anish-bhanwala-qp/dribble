@@ -1,0 +1,16 @@
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <div class="panel-title">Matches</div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped table-condensed">
+	  <tbody>
+            <tr ng-repeat="match in data.matches | orderBy:['dateTime', 'status']">
+                <td align="center">{{match.team1Name}}</td>
+                <td align="center">{{match.status == 'Over' ? (match.team1Score + ' - ' + match.team2Score) : (match.matchDateTime | formatParseDate)}}</td>
+                <td align="center">{{match.team2Name}}</td>                
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

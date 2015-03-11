@@ -1,0 +1,30 @@
+(function(){
+    angular.module('dribble')
+        .service('tournamentService', ['$http', 'userService', 'APP_CONSTANTS', '$rootScope',
+				       function($http, userService, APP_CONSTANTS, $rootScope) {
+			 function getAll() {
+			     $rootScope.myPromise = $http({
+				     method: "post",
+				     url: APP_CONSTANTS.apiUrl + 'functions/tournaments',
+				     data: {}
+				 })
+				 return $rootScope.myPromise;
+			 }
+
+			 function getData(tournament) {
+			     $rootScope.myPromise = $http({
+				     method: "post",
+				     url: APP_CONSTANTS.apiUrl + 'functions/tournamentDetails',
+				     data: {
+					 tournamentId: tournament.objectId
+				     }
+				 });
+			     return $rootScope.myPromise;
+			 }
+
+			 return {
+			     getAll: getAll,
+				 getData: getData
+				 };
+		     }]);
+})();

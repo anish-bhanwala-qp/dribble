@@ -1,0 +1,20 @@
+<div class="container-fluid">
+    <div>
+        <div class="well" ng-repeat="date in data.matchDates | orderBy:'-getTime()'">
+            <div class="row">
+                <div class="col-xs-12">
+                    <h4>{{date.toDateString()}}</h4>
+                </div>
+            </div>
+            <div class="row" ng-repeat="match in data.matches | dateFilter:date">
+                <div class="col-sm-4 col-md-4 col-lg-4 text-center col-xs-4">{{match.team1Name}}</div>
+                <div class="col-sm-4 col-md-4 col-lg-4 text-center col-xs-4">
+                    {{match.status == 'Over' ? (match.team1Score + ' - ' + match.team2Score) : (match.matchDateTime | formatParseDate)}}
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 text-center col-xs-4">
+                    {{match.team2Name}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

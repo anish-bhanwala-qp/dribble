@@ -1,0 +1,71 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title">Add Match</h4>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal1" name="matchForm" novalidate>
+        <db-field-label label="Select Team 1" label-for="team1ID" field="matchForm.team1" orientation="vertical">
+            <select name="team1"
+                    class="form-control input-sm"
+                    id="team1ID"
+                    ng-model="match.team1"
+                    ng-options="team.name for team in (teams | orderBy:'name') track by team.objectId"
+                    required>
+                <option value="">None</option>
+            </select>
+            <span ng-show="showValidationMessage(matchForm, matchForm.team1)" class="text-danger">
+                Team is required
+            </span>
+        </db-field-label>
+        <div class="text-center">
+            <h4>VS</h4>
+        </div>
+        <db-field-label label="Select Team 2" label-for="team2ID" field="matchForm.team2" orientation="vertical">
+            <select name="team2"
+                    class="form-control input-sm"
+                    id="team2ID"
+                    ng-model="match.team2"
+                    ng-options="team.name for team in (teams | orderBy:'name') track by team.objectId"
+                    required>
+                <option value="">None</option>
+            </select>
+            <span ng-show="showValidationMessage(matchForm, matchForm.team2)" class="text-danger">
+                Team is required
+            </span>
+            <span ng-show="submitted && match.team1.objectId == match.team2.objectId" class="text-danger">
+                The two teams must be different
+            </span>
+        </db-field-label>
+        <db-field-label label="Match Date/Time" label-for="matchDateTimeID" field="matchForm.matchDateTime" orientation="vertical">
+            <input type="datetime-local"
+                   id="matchDateTimeID"
+                   name="matchDateTime"
+                   ng-model="match.matchDateTime"
+                   placeholder="yyyy-MM-ddTHH:mm:ss"
+                   required/>
+            <span ng-show="showValidationMessage(matchForm, matchForm.matchDateTime)" class="text-danger">
+                Match Date/Teime is required
+            </span>
+        </db-field-label>
+
+        <db-field-label label="Select Stage" label-for="stageID" field="matchForm.stage" orientation="vertical">
+            <select name="stage"
+                    class="form-control input-sm"
+                    id="stageID"
+                    ng-model="match.stage"
+                    required>
+                <option value="Group">Group</option>
+                <option value="QuarterFinal">Quarter Final</option>
+                <option value="SemiFinal">SemiFinal</option>
+                <option value="Final">Final</option>
+            </select>
+            <span ng-show="showValidationMessage(matchForm, matchForm.stage)" class="text-danger">
+                Stage is required
+            </span>
+        </db-field-label>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" ng-click="cancel()" class="btn btn-default" data-dismiss="modal">Cancel</button>
+    <button type="submit" ng-click="submit(matchForm)" class="btn btn-primary">Add Match</button>
+</div>
