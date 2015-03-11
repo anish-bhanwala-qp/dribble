@@ -12,28 +12,36 @@
 
         <div class="collapse navbar-collapse fixed-top-bar-items">
             <ul class="nav navbar-nav">
-                <li ng-class="getCssClass('matches')">
+                <li ng-class="getCssClass('matches')" onclick="toggleNavbar()">
                     <a ui-sref="matches" ng-click="selectTab('matches')">Matches</a>
                 </li>
-                <li ng-class="getCssClass('table')">
+                <li ng-class="getCssClass('table')" onclick="toggleNavbar()">
                     <a ui-sref="table" ng-click="selectTab('table')">Table</a>
                 </li>
-                <li ng-class="getCssClass('stats')">
+                <li ng-class="getCssClass('stats')" onclick="toggleNavbar()">
                     <a ui-sref="stats" ng-click="selectTab('stats')">Stats</a>
                 </li>
-                <li ng-if="isAdmin" ng-class="getCssClass('admin')">
+                <li ng-if="isAdmin" ng-class="getCssClass('admin')" onclick="toggleNavbar()">
                     <a ui-sref="admin" ng-click="selectTab('admin')">Admin</a>
                 </li>
-		<li ng-if="isCaptain" ng-class="getCssClass('myTeam')">
+                <li ng-if="isCaptain" ng-class="getCssClass('myTeam')" onclick="toggleNavbar()">
                     <a ui-sref="myTeam" ng-click="selectTab('myTeam')">My Team</a>
                 </li>
             </ul>
-	        <div ng-show="showSignIn" class="nav navbar-nav navbar-right" style="margin-right: 0px;">
+            <div ng-show="showSignIn" class="nav navbar-nav navbar-right" style="margin-right: 0px;">
                 <button type="button" class="btn btn-default navbar-btn" ng-click="signInCallback()">Sign in</button>
             </div>
         </div>
     </div>
 </div>
+<script>
+    function toggleNavbar() {
+        if ($('.icon-bar').is(':visible')) {
+            $('.fixed-top-bar-items').collapse('toggle');
+        }
+
+    }
+</script>
 <style>
     .navbar .navbar-nav {
         display: inline-block;
