@@ -1,9 +1,9 @@
-<div class="modal-header">
-    <button type="button" class="close" ng-click="cancel()" data-dismiss="modal" aria-hidden="true">&times;</button>
-    <h4 class="modal-title">Sign In</h4>
-</div>
-<div class="modal-body">
-    <form class="form-horizontal1" name="loginForm" novalidate>
+<form class="form-horizontal1" name="loginForm" ng-submit="submit(loginForm)" novalidate>
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="cancel()" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Sign In</h4>
+    </div>
+    <div class="modal-body">
         <db-field-label label="Username" label-for="usernameID" field="loginForm.username" orientation="vertical">
             <input type="text"
                    name="username"
@@ -26,10 +26,9 @@
                 Password is required
             </span>
         </db-field-label>
-    </form>
-</div>
-<div class="modal-footer">
-    <button type="button" ng-click="cancel()" class="btn btn-default" data-dismiss="modal">Cancel</button>
-    <button type="submit" ng-click="submit(loginForm)" class="btn btn-primary">Sign In</button>
-</div>
-
+    </div>
+    <div class="modal-footer">
+        <button type="button" ng-click="cancel()" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary">Sign In</button>
+    </div>
+</form>
