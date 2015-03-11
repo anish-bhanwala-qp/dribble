@@ -51,6 +51,8 @@
                                         updateArray($scope.data.table, tableService.calculateTable($scope.data));
                                         updateArray($scope.data.consolidatedMatchEvents,
                                             tableService.calculateStats(data.result.matchEvents, $scope.data));
+                                        populateMatchEventsPlayerNames(data.result.matchEvents, data.result.players);
+                                        populateMatchEvents($scope.data.matches, data.result.matchEvents);
                                     })
                                     .error(function(error) {
                                         toaster.put('error', 'Error occurred while loading data');
@@ -105,6 +107,34 @@
                             }
                         });
                     });
+                }
+
+                function populateMatchEventsPlayerNames(matchEvents, players) {
+                    for (var i=0; i < matchEvents.length; i++) {
+                        var event = matchEvents[i];
+                        var events = [];
+                        for (var j=0; j < players.length; j++) {
+                            var player = players[j];
+                            if (event.playerId.objectId == player.objectId) {
+                                event.playerName = player.name;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                function populateMatchEvents(matches, matchEvents) {
+                    for (var i=0; i < matches.length; i++) {
+                        var match = matches[i];
+                        var events = [];
+                        for (var j=0; j < matchEvents.length; j++) {
+                            var event = matchEvents[j];
+                            if (event.matchId.objectId == match.objectId) {
+                                events.push(event);
+                            }
+                        }
+                        match.events = events;
+                    }
                 }
             }]);
 })();
