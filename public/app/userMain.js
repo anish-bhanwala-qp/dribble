@@ -217,7 +217,7 @@
                         for (var i=0; i < $scope.data.selectedMatchGuest.length; i++) {
                             var tempGuest = $scope.data.selectedMatchGuest[i];
                             $scope.data.editMatchGuest.push(tempGuest.name +
-                                ',' + tempGuest.phone + ',' + tempGuest.email);
+                                ',' + tempGuest.phone + ',' + (tempGuest.email || ''));
                         }
                     }
 
@@ -314,7 +314,7 @@
                         for (var i=0; i < guests.length; i++) {
                             var guestTemp = guests[i];
                             var name = guestTemp.name.toUpperCase();
-                            if (guestTemp.name && guestTemp.phone && guestTemp.email) {
+                            if (guestTemp.name && guestTemp.phone) {
                                 for (var j=0; j < guests.length; j++) {
                                     var otherName = guests[j].name.toUpperCase();
                                     if (i != j && name == otherName) {
@@ -323,7 +323,7 @@
                                     }
                                 }
                             } else {
-                                toaster.pop('error', 'Name/phone/email missing at row ' + (i + 1));
+                                toaster.pop('error', 'Name/Phone missing at row ' + (i + 1));
                                 return;
                             }
                         }
@@ -336,6 +336,11 @@
                             for (var j=0; j < guests.length; j++) {
                                 var guestTemp = guests[j];
                                 if (guestTemp.name.toUpperCase() == alreadySelectedGuest.name.toUpperCase()) {
+                                    if (guestTemp.phone != alreadySelectedGuest.phone ||
+                                        guestTemp.email != alreadySelectedGuest.email) {
+                                        found = false;
+                                        break;
+                                    }
                                     found = true;
                                     break;
                                 }
@@ -358,6 +363,11 @@
                             for (var j=0; j < $scope.data.selectedMatchGuest.length; j++) {
                                 var alreadySelectedGuest = $scope.data.selectedMatchGuest[j];
                                 if (guestTemp.name.toUpperCase() == alreadySelectedGuest.name.toUpperCase()) {
+                                    if (guestTemp.phone != alreadySelectedGuest.phone ||
+                                        guestTemp.email != alreadySelectedGuest.email) {
+                                        found = false;
+                                        break;
+                                    }
                                     found = true;
                                     break;
                                 }
