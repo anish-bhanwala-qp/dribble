@@ -32,12 +32,12 @@
 					     angular.extend(user, data.result);
 					 }).error(function(data) {
 						 console.log(data);
-						 $window.location.href = '/index.html';
+						 $window.location.href = 'index.html';
 					     });
 			     } else {
 				 toaster.pop('warning', 'Session Expired!');
 				 $timeout(function() {
-					 $window.location.href = '/index.html';
+					 $window.location.href = 'index.html';
 				     }, 500);
 			     }
 

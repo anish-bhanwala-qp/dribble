@@ -17,7 +17,7 @@
 					.success(function(data, status) {
 						toaster.pop('success', 'Signed in successfully!');
 						$timeout(function() {
-							var url = data.result.isAdmin ? '/admin.html' : '/user.html';
+							var url = data.result.isAdmin ? 'admin.html' : 'user.html';
 							url += '?token=' + data.result.sessionToken;
 							$window.location.href = url;
 						    }, 500)

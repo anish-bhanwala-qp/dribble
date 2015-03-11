@@ -62,7 +62,7 @@
 
 			    $scope.showSignIn = function() {
 				$modal.open({
-					templateUrl: "/app/user/login-tpl.html",
+					templateUrl: "app/user/login-tpl.html",
 					controller: "LoginController",
 					size: 'sm'
 				    })
