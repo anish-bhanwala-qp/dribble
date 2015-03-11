@@ -223,7 +223,9 @@
                     });
 
                     modalInstance.result.then(function(players) {
-                        $scope.data.players.push.apply($scope.data.players, players);
+                        setTimeout(function() {
+                            $scope.tournamentSelected();
+                        }, 1000);
                     });
                 }
 

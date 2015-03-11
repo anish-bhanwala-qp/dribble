@@ -17,7 +17,7 @@
                             if (players.length > 0) {
                                 tournamentService.addPlayer(tournament, team, players)
                                     .success(function(data, status) {
-                                        toaster.pop('info', 'Adding Players, refresh page to view added players.');
+                                        toaster.pop('info', 'Adding Players');
                                         $modalInstance.close(data.result);
                                     })
                                     .error(function(data, status) {
