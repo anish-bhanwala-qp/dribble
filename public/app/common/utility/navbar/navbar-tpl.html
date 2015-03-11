@@ -14,7 +14,7 @@
         </div>
 
         <div class="collapse navbar-collapse fixed-top-bar-items">
-            <ul class="nav navbar-nav">
+            <ul class="nav navbar-nav center-menu">
                 <li ng-class="getCssClass('matches')" onclick="toggleNavbar()">
                     <a ui-sref="matches" ng-click="selectTab('matches')">Matches</a>
                 </li>
@@ -31,9 +31,19 @@
                     <a ui-sref="myTeam" ng-click="selectTab('myTeam')">My Team</a>
                 </li>
             </ul>
-            <div ng-show="showSignIn" class="nav navbar-nav navbar-right" style="margin-right: 0px;">
+            <ul class="nav navbar-nav navbar-right" ng-show="showSignIn">
+                <li onclick="toggleNavbar()">
+                    <button type="button"
+                            class="btn btn-default navbar-btn"
+                            ng-click="signInCallback()"
+                            style="margin-right: 5px;">
+                        Sign in
+                    </button>
+                </li>
+            </ul>
+            <!--<div ng-show="showSignIn" class="nav navbar-nav navbar-right" style="margin-right: 0px;">
                 <button type="button" class="btn btn-default navbar-btn" ng-click="signInCallback()">Sign in</button>
-            </div>
+            </div>-->
         </div>
     </div>
 </div>
@@ -46,7 +56,7 @@
     }
 </script>
 <style>
-    .navbar .navbar-nav {
+    .center-menu {
         display: inline-block;
         float: none;
     }
