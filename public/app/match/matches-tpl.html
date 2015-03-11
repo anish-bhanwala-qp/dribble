@@ -2,7 +2,7 @@
     <div class="panel panel-primary" ng-repeat="date in data.matchDates | orderBy:'-getTime()'">
         <table class="table table-condensed table-striped">
             <tr class="info">
-                <td colspan="3"><h4>{{date.toDateString()}}</h4></td>
+                <td colspan="3"><h4>{{date.toDateString().replace('2015','')}}</h4></td>
             </tr>
             <tr ng-repeat="match in data.matches | dateFilter:date">
                 <td width="33%" class="text-left">{{match.team1Name}}</td>
