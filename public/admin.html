@@ -45,7 +45,7 @@
     <Script src="app/user/userService.js"></script>
     <script src="app/table/tableService.js"></script>
 </head>
-<body ng-controller="MainController" style="padding-top: 60px;">
+<body ng-controller="MainController" style="padding-top: 80px;">
 
 <db-navbar is-admin="true"></db-navbar>
 
@@ -56,7 +56,7 @@
 
 <script type="text/ng-template" id="admin-tpl.html">
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-        <div class="panel panel-primary">
+        <div class="panel panel-info">
             <div class="panel-heading" role="tab" id="headingOne">
                 <div class="row">
                     <div class="col-xs-6">
@@ -107,8 +107,6 @@
                     </db-field-label>
                 </div>
             </div>
-
-            <hr>
 
             <div ng-if="data.tournament && data.tournament.objectId">
                 <div class="row">
@@ -161,7 +159,7 @@
                             <span class="fa fa-plus"></span> Add Player
                         </button>
                     </div>
-                    <div class="panel panel-primary">
+                    <div class="panel panel-info">
                         <table class="table table-condensed table-striped">
                             <tr ng-repeat="player in data.players |  filter:data.team.objectId">
                                 <td>{{player.name}}</td>
@@ -175,7 +173,7 @@
         </div>
 
        <div class="panel-group" id="accordion2" role="tablist" aria-multiselectable="true">
-           <div class="panel panel-primary">
+           <div class="panel panel-info">
                <div class="panel-heading" role="tab" id="headingTwo">
                    <h4 class="panel-title">
                        (<i class="fa" ng-class="{'fa-plus': lineupExpanded, 'fa-minus': !lineupExpanded}"></i>)
@@ -266,7 +264,7 @@
        </div>
 
         <div class="panel-group" id="accordion3" role="tablist" aria-multiselectable="true">
-            <div class="panel panel-primary">
+            <div class="panel panel-info">
                 <div class="panel-heading" role="tab" id="headingThree">
                     <div class="row">
                         <div class="col-xs-5">
