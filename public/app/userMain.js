@@ -279,9 +279,11 @@
                                             .error(function(data, status) {
                                                 toaster.pop('error', data.error);
                                             });
-
                                     } else {
-
+                                        toaster.pop('success', 'MatchLineup updated successfully');
+                                        $timeout(function() {
+                                            getMatchLineups(true);
+                                        }, 500);
                                     }
                                 })
                                 .error(function(data, status) {
