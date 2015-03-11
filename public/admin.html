@@ -167,6 +167,92 @@
                 </div>
             </div>
         </div>
+
+       <div class="panel-group" id="accordion2" role="tablist" aria-multiselectable="true">
+           <div class="panel panel-primary">
+               <div class="panel-heading" role="tab" id="headingOne">
+                   <h4 class="panel-title">
+                       <a data-toggle="collapse" data-parent="#accordion2" href="#collapseOne2" aria-expanded="true" aria-controls="collapseOne2">
+                           Match Lineup/Guests <span>(click to expand)</span>
+                       </a>
+                   </h4>
+               </div>
+               <div id="collapseOne2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                   <div class="panel-body">
+                       <db-field-label label="Select Match Date" label-for="selectedMatchDateID" orientation="vertical">
+                           <select name="selectedMatchDate"
+                                   class="form-control input-sm"
+                                   id="selectedMatchDateID"
+                                   ng-change="matchDateSelected()"
+                                   ng-model="data.selectedMatchDate"
+                                   ng-options="date for date in data.matchDates">
+                               <option value="">None</option>
+                           </select>
+                       </db-field-label>
+                       <div class="">
+                           <div class="panel panel-info">
+                               <div class="panel-heading">
+                                   <b>Guests</b>
+                                   <span ng-if="data.selectedMatchGuests.length == 0">
+                                       No results found
+                                   </span>
+                               </div>
+                               <table class="table table-condensed" ng-if="data.selectedMatchGuests.length > 0">
+                                   <thead>
+                                   <tr>
+                                       <th>Name</th>
+                                       <th>Phone</th>
+                                       <th>Email</th>
+                                       <th>Team</th>
+                                       <th>Match</th>
+                                   </tr>
+                                   </thead>
+                                   <tbody>
+                                   <tr ng-repeat="guest in data.selectedMatchGuests | orderBy:['matchName', 'teamName']">
+                                       <td>{{guest.name}}</td>
+                                       <td>{{guest.phone}}</td>
+                                       <td>{{guest.email}}</td>
+                                       <td>{{guest.teamName}}</td>
+                                       <td>{{guest.matchName}}</td>
+                                   </tr>
+                                   </tbody>
+                               </table>
+                           </div>
+                           <div class="panel panel-info">
+                               <div class="panel-heading">
+                                   <b>Lineups </b>
+                                   <span ng-if="data.selectedMatchLineups.length == 0">
+                                       No results found
+                                   </span>
+                               </div>
+                               <table class="table table-condensed" ng-if="data.selectedMatchLineups.length > 0">
+                                   <thead>
+                                   <tr>
+                                       <th>Name</th>
+                                       <th>Phone</th>
+                                       <th>Email</th>
+                                       <th>Team</th>
+                                       <th>Match</th>
+                                   </tr>
+                                   </thead>
+                                   <tbody>
+                                   <tr ng-repeat="lineup in data.selectedMatchLineups | orderBy:['matchName', 'teamName', 'name']">
+                                       <td>{{lineup.player.name}}</td>
+                                       <td>{{lineup.player.phone}}</td>
+                                       <td>{{lineup.player.email}}</td>
+                                       <td>{{lineup.teamName}}</td>
+                                       <td>{{lineup.matchName}}</td>
+                                   </tr>
+                                   </tbody>
+                               </table>
+                           </div>
+                       </div>
+
+                   </div>
+               </div>
+           </div>
+       </div>
+
         <div class="panel panel-primary" ng-if="data.tournament && data.tournament.objectId">
             <div class="panel-heading">
                 <div class="row">

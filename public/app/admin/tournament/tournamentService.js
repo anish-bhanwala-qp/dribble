@@ -132,32 +132,64 @@
                     return $rootScope.myPromise;
                 }
 
-		function getAllUsers() {
+                function getAllUsers() {
                     $rootScope.myPromise = $http({
-			    method: "post",
-			    url: APP_CONSTANTS.apiUrl + 'functions/users',
-			    data: {},
-			    headers: {
-				'X-Parse-Session-Token' : userService.token()
-			    }
-			})
-			return $rootScope.myPromise;
+                        method: "post",
+                        url: APP_CONSTANTS.apiUrl + 'functions/users',
+                        data: {},
+                        headers: {
+                            'X-Parse-Session-Token' : userService.token()
+                        }
+                    })
+                    return $rootScope.myPromise;
                 }
 
                 function addUser(user) {
                     $rootScope.myPromise = $http({
-			    method: "post",
-			    url: APP_CONSTANTS.apiUrl + 'functions/addUser',
-			    data: {
-				teamId: user.team.objectId,
-				username: user.username,
-				email: user.email,
-				password: user.password
-			    },
-			    headers: {
-				'X-Parse-Session-Token' : userService.token()
-			    }
-			});
+                        method: "post",
+                        url: APP_CONSTANTS.apiUrl + 'functions/addUser',
+                        data: {
+                            teamId: user.team.objectId,
+                            username: user.username,
+                            email: user.email,
+                            password: user.password
+                        },
+                        headers: {
+                            'X-Parse-Session-Token' : userService.token()
+                        }
+                    });
+                    return $rootScope.myPromise;
+                }
+
+                function getMatchLineup(match) {
+                    $rootScope.myPromise = $http({
+                        method: "post",
+                        url: APP_CONSTANTS.apiUrl + 'functions/matchLineupsForTeam',
+                        data: {
+                            matchId: match.objectId
+                        }
+                    });
+                    return $rootScope.myPromise;
+                }
+
+                function getMatchGuestsForMatches(matches) {
+                    $rootScope.myPromise = $http({
+                        method: "post",
+                        url: APP_CONSTANTS.apiUrl + 'functions/matchGuestsForMatch',
+                        data: {
+                            matches: matches
+                        }
+                    });
+                    return $rootScope.myPromise;
+                }
+                function getMatchLineupsForMatches(matches) {
+                    $rootScope.myPromise = $http({
+                        method: "post",
+                        url: APP_CONSTANTS.apiUrl + 'functions/matchLineupsForMatch',
+                        data: {
+                            matches: matches
+                        }
+                    });
                     return $rootScope.myPromise;
                 }
 
@@ -170,9 +202,11 @@
                     addMatch: addMatch,
                     editMatch: editMatch,
                     addPlayer: addPlayer,
-			addUpdateMatchEvent: addUpdateMatchEvent,
-			getAllUsers: getAllUsers,
-			addUser: addUser
+                    addUpdateMatchEvent: addUpdateMatchEvent,
+                    getAllUsers: getAllUsers,
+                    addUser: addUser,
+                    getMatchGuestsForMatches: getMatchGuestsForMatches,
+                    getMatchLineupsForMatches: getMatchLineupsForMatches
                 };
             }]);
 })();

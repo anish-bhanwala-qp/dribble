@@ -52,6 +52,30 @@ Parse.Cloud.define("matchGuests", function(request, response) {
     });
 });
 
+Parse.Cloud.define("matchGuestsForMatch", function(request, response) {
+    var queryMatchGuest = new Parse.Query(Parse.Object.extend("MatchGuest"));
+    queryMatchGuest.containedIn('matchId', request.params.matches);
+    queryMatchGuest.find({
+        success: function(guests) {
+            response.success(guests);
+        }, error: function(obj, error) {
+            response.error(error);
+        }
+    });
+});
+
+Parse.Cloud.define("matchLineupsForMatch", function(request, response) {
+    var queryMatchGuest = new Parse.Query(Parse.Object.extend("MatchLineup"));
+    queryMatchGuest.containedIn('matchId', request.params.matches);
+    queryMatchGuest.find({
+        success: function(guests) {
+            response.success(guests);
+        }, error: function(obj, error) {
+            response.error(error);
+        }
+    });
+});
+
 Parse.Cloud.define("matchLineups", function(request, response) {
     var queryMatchLineup = new Parse.Query(Parse.Object.extend("MatchLineup"));
     queryMatchLineup.find({

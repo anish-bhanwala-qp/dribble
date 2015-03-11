@@ -24,9 +24,12 @@
             function($scope, userService, tournamentService, toaster, $modal, tableService) {
                 $scope.user;
                 $scope.tournaments;
-		$scope.users;
+                $scope.users;
                 $scope.data = {
-		    matchDates: [],
+                    selectedMatchDate: {},
+                    selectedMatchGuests: [],
+                    selectedMatchLineups: [],
+                    matchDates: [],
                     tournament: {},
                     groups: [],
                     teams: [],
@@ -51,13 +54,13 @@
                         }).error(function(data) {
                             console.log(data);
                         });
-		    $scope.users = tournamentService.getAllUsers()
-		    .success(function(data) {
+                    $scope.users = tournamentService.getAllUsers()
+                        .success(function(data) {
                             console.log(data);
                             $scope.users = data.result;
                         }).error(function(data) {
-				console.log(data);
-			    });
+                            console.log(data);
+                        });
                 }
 
                 $scope.init();
@@ -219,27 +222,100 @@
                     });
                 }
 
-		$scope.showAddUser = function() {
+                $scope.showAddUser = function() {
                     var modalInstance = $modal.open({
-			    templateUrl: 'add-user-tpl.html',
-			    controller: 'AddUserController',
-			    size: 'sm',
-			    resolve: {
-				toaster: function() {
+                        templateUrl: 'add-user-tpl.html',
+                        controller: 'AddUserController',
+                        size: 'sm',
+                        resolve: {
+                            toaster: function() {
                                 return toaster
-				},
-				tournamentService: function() {
-				    return tournamentService;
-				},
-				teams: function() {
+                            },
+                            tournamentService: function() {
+                                return tournamentService;
+                            },
+                            teams: function() {
                                 return $scope.data.teams
-				}
-			    }
-			});
+                            }
+                        }
+                    });
 
                     modalInstance.result.then(function(user) {
-			    $scope.users.push.apply($scope.users, user);
-			});
+                        $scope.users.push.apply($scope.users, user);
+                    });
+                }
+
+
+                $scope.matchDateSelected = function() {
+                    var matches = [];
+                    $scope.data.selectedMatchGuests.length = 0;
+                    $scope.data.selectedMatchLineups.length = 0;
+                    for (var i=0; i < $scope.data.matches.length; i++) {
+                        var match = $scope.data.matches[i];
+                        if (match.status == 'Scheduled'
+                            && match.dateOnly.getTime() == $scope.data.selectedMatchDate.getTime()) {
+                            matches.push(match);
+                        }
+                    }
+                    if (matches.length == 0) {
+                        toaster.pop('info', 'No matches are scheduled for selected date');
+                    } else {
+                        tournamentService.getMatchGuestsForMatches(matches)
+                            .success(function(data) {
+                                for (var j=0; j < data.result.length; j++) {
+                                    var guest = data.result[j];
+                                    for (var k=0; k < $scope.data.teams.length; k++) {
+                                        var team = $scope.data.teams[k];
+                                        if (guest.teamId.objectId == team.objectId) {
+                                            guest.teamName = team.name;
+                                            break;
+                                        }
+                                    }
+                                    for (var k=0; k < $scope.data.matches.length; k++) {
+                                        var match = $scope.data.matches[k];
+                                        if (guest.matchId.objectId == match.objectId) {
+                                            guest.matchName = match.team1Name + ' Vs ' + match.team2Name;
+                                            break;
+                                        }
+                                    }
+                                    $scope.data.selectedMatchGuests.push(guest);
+                                }
+                            })
+                            .error(function(data) {
+                                toaster.pop('error', data.error);
+                            });
+                        tournamentService.getMatchLineupsForMatches(matches)
+                            .success(function(data) {
+                                for (var j=0; j < data.result.length; j++) {
+                                    var lineup = data.result[j];
+                                    for (var k=0; k < $scope.data.teams.length; k++) {
+                                        var team = $scope.data.teams[k];
+                                        if (lineup.teamId.objectId == team.objectId) {
+                                            lineup.teamName = team.name;
+                                            break;
+                                        }
+                                    }
+                                    for (var k=0; k < $scope.data.matches.length; k++) {
+                                        var match = $scope.data.matches[k];
+                                        if (lineup.matchId.objectId == match.objectId) {
+                                            lineup.matchName = match.team1Name + ' Vs ' + match.team2Name;
+                                            break;
+                                        }
+                                    }
+                                    for (var k=0; k < $scope.data.players.length; k++) {
+                                        var player = $scope.data.players[k];
+                                        if (lineup.playerId.objectId == player.objectId) {
+                                            lineup.player = player;
+                                            break;
+                                        }
+                                    }
+                                    $scope.data.selectedMatchLineups.push(lineup);
+                                }
+                            })
+                            .error(function(data) {
+                                toaster.pop('error', data.error);
+                            });
+                    }
                 }
 
                 function getParameterByName(name) {
@@ -259,10 +335,9 @@
                 }
 
                 function populateTeamNames(matches, teams) {
-		    $scope.data.matchDates.length = 0;
+                    $scope.data.matchDates.length = 0;
                     angular.forEach(matches, function(match) {
-			match.dateTime = new Date(match.matchDateTime.iso);
-			match.dateTime = new Date(match.matchDateTime.iso);
+                        match.dateTime = new Date(match.matchDateTime.iso);
                         var dateTemp = new Date(match.matchDateTime.iso);
                         dateTemp.setHours(0,0,0,0);
                         match.dateOnly = dateTemp;
@@ -286,41 +361,41 @@
                     });
                 }
             }])
-	.controller('AddUserController',
-		    ['$scope', 'toaster', 'tournamentService', '$modalInstance', 'teams',
-		     function($scope, toaster, tournamentService, $modalInstance, teams) {
-			    //All the initialization should go inside init function
-			    $scope.newUser = {
+        .controller('AddUserController',
+            ['$scope', 'toaster', 'tournamentService', '$modalInstance', 'teams',
+                function($scope, toaster, tournamentService, $modalInstance, teams) {
+                    //All the initialization should go inside init function
+                    $scope.newUser = {
 
-			    };
-			    $scope.teams = teams;
+                    };
+                    $scope.teams = teams;
 
-			    $scope.submitted = false;
+                    $scope.submitted = false;
 
-			    $scope.submit = function(form) {
-				$scope.submitted = true;
-				if (form.$valid) {
-				    tournamentService.addUser($scope.newUser)
-					.success(function(data, status) {
-						toaster.pop('success', 'User added successfully!');
-						$modalInstance.close(data.result);
-					    })
-					.error(function(data, status) {
-						toaster.pop('error', data.error);
-						$modalInstance.dismiss('cancel');
-					    });
-				}
-			    };
+                    $scope.submit = function(form) {
+                        $scope.submitted = true;
+                        if (form.$valid) {
+                            tournamentService.addUser($scope.newUser)
+                                .success(function(data, status) {
+                                    toaster.pop('success', 'User added successfully!');
+                                    $modalInstance.close(data.result);
+                                })
+                                .error(function(data, status) {
+                                    toaster.pop('error', data.error);
+                                    $modalInstance.dismiss('cancel');
+                                });
+                        }
+                    };
 
-			    $scope.showValidationMessage = function(form, field) {
-				if (form && field) {
-				    return ($scope.submitted || field.$dirty) && field.$invalid;
-				}
-				return false;
-			    };
+                    $scope.showValidationMessage = function(form, field) {
+                        if (form && field) {
+                            return ($scope.submitted || field.$dirty) && field.$invalid;
+                        }
+                        return false;
+                    };
 
-			    $scope.cancel = function() {
-				$modalInstance.dismiss('cancel');
-			    };
-			}]);
+                    $scope.cancel = function() {
+                        $modalInstance.dismiss('cancel');
+                    };
+                }]);
 })();
