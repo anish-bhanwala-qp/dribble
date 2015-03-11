@@ -1,24 +1,29 @@
-<div class="panel panel-info">
-    <div class="panel-heading">
-        <div class="panel-title">Stats</div>
-    </div>
-    <table class="table table-striped table-condensed">
-        <thead>
-        <th>#</th>
-        <th>Match</th>
-        <th>Match Date/Time</th>
-        <th>Status</th>
-        <th>Stage</th>
-        </thead>
+<div class="container-fluid">
+    <div class="panel panel-info">
+        <div class="table-responsive">
+            <table class="table table-striped table-condensed">
+                <thead>
+                <tr class="active">
+                    <th>#</th>
+                    <th>Player</th>
+                    <th>Team</th>
+                    <th>Yellow Card</th>
+                    <th>Red Card</th>
+                    <th>Goal</th>
+                </tr>
+                </thead>
 
-        <tbody>
-        <tr ng-repeat="match in data.matches | orderBy:'status':true">
-            <td>{{$index + 1}}</td>
-            <td>{{match.team1Name + ' VS ' + match.team2Name}}</td>
-            <td>{{match.matchDateTime | formatParseDate}}</td>
-            <td>{{match.status}}</td>
-            <td>{{match.stage}}</td>
-        </tr>
-        </tbody>
-    </table>
+                <tbody>
+                <tr ng-repeat="stats in data.consolidatedMatchEvents | orderBy: ['goal', 'yellowCard', 'redCard']: true">
+                    <td>{{$index + 1}}</td>
+                    <td>{{stats.playerName}}</td>
+                    <td>{{stats.teamName}}</td>
+                    <td>{{stats.yellowCard}}</td>
+                    <td>{{stats.redCard}}</td>
+                    <td>{{stats.goal}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

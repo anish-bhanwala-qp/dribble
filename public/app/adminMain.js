@@ -38,7 +38,8 @@
                     matchEvents: [],
                     team: {},
                     group: {},
-                    table: []
+                    table: [],
+                    consolidatedMatchEvents: []
                 };
 
                 $scope.init = function() {
@@ -80,6 +81,8 @@
                                 $scope.data.table.length = 0;
                                 $scope.data.table.push.apply($scope.data.table,
                                     tableService.calculateTable($scope.data));
+                                updateArray($scope.data.consolidatedMatchEvents,
+                                    tableService.calculateStats(data.result.matchEvents, $scope.data));
                             }).error(function(data) {
                                 toaster.pop('error', data.error);
                                 console.log(data);

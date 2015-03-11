@@ -699,6 +699,22 @@ Parse.Cloud.define("tournamentDetails", function(request, response) {
                                     queryPlayer.equalTo("tournamentId", tournament);
                                     queryPlayer.find({
                                         success: function(players) {
+                                            var queryEvents = new Parse.Query(Parse.Object.extend("MatchEvent"));
+                                            queryEvents.equalTo("tournamentId", tournament);
+                                            queryEvents.find({
+                                                success: function(events) {
+                                                    response.success({
+                                                        tournament: tournament,
+                                                        groups: groups,
+                                                        teams: teams,
+                                                        matches: matches,
+                                                        players: players,
+                                                        matchEvents: events
+                                                    });
+                                                }, error: function(obj, error) {
+                                                    response.error("Error fetching matches");
+                                                }
+                                            });
                                             response.success({
                                                 tournament: tournament,
                                                 groups: groups,

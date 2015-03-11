@@ -32,7 +32,7 @@
                         teams: [],
                         matches: [],
                         players: [],
-                        matchEvents: [],
+                        consolidatedMatchEvents: [],
                         myTeam: {},
                         myPlayers: [],
                         group: {},
@@ -73,7 +73,6 @@
                                     updateArray($scope.data.groups, data.result.groups);
                                     updateArray($scope.data.matches, data.result.matches);
                                     updateArray($scope.data.players, data.result.players);
-                                    updateArray($scope.data.matchEvents, data.result.matchEvents);
 
                                     populateTeamNames($scope.data.matches, $scope.data.teams);
 
@@ -83,6 +82,8 @@
                                     $scope.data.table.length = 0;
                                     $scope.data.table.push.apply($scope.data.table,
                                         tableService.calculateTable($scope.data));
+                                    updateArray($scope.data.consolidatedMatchEvents,
+                                        tableService.calculateStats(data.result.matchEvents, $scope.data));
 
                                     getMatchLineups(false);
                                     getMatchGuests(false);
