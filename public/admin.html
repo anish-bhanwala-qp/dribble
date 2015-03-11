@@ -56,13 +56,13 @@
 
 <script type="text/ng-template" id="admin-tpl.html">
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-        <div class="panel panel-default">
+        <div class="panel panel-primary">
             <div class="panel-heading" role="tab" id="headingOne">
                 <div class="row">
                     <div class="col-xs-6">
                         <h4 class="panel-title">
                             <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                Users <small>(click to expand)</small>
+                                Users <span>(click to expand)</span>
                             </a>
                         </h4>
                     </div>
@@ -155,7 +155,7 @@
                             <span class="fa fa-plus"></span> Add Player
                         </button>
                     </div>
-                    <div class="panel panel-default">
+                    <div class="panel panel-primary">
                         <table class="table table-condensed table-striped">
                             <tr ng-repeat="player in data.players |  filter:data.team.objectId">
                                 <td>{{player.name}}</td>
@@ -167,7 +167,7 @@
                 </div>
             </div>
         </div>
-        <div class="panel panel-info" ng-if="data.tournament && data.tournament.objectId">
+        <div class="panel panel-primary" ng-if="data.tournament && data.tournament.objectId">
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-xs-5">

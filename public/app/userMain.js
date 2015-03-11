@@ -341,7 +341,7 @@
                             if (!found) {
                                 for (var j=0; j < $scope.data.selectedMatchGuest.length; j++) {
                                     var guestTemp = $scope.data.selectedMatchGuest[j];
-                                    if (guestTemp == alreadySelectedGuest.name) {
+                                    if (guestTemp.name.toUpperCase() == alreadySelectedGuest.name.toUpperCase()) {
                                         deletedGuests.push(guestTemp)
                                         break;
                                     }
@@ -382,9 +382,11 @@
                                             .error(function(data, status) {
                                                 toaster.pop('error', data.error);
                                             });
-
                                     } else {
-
+                                        toaster.pop('success', 'Guests updated successfully');
+                                        $timeout(function() {
+                                            getMatchGuests(true);
+                                        }, 500);
                                     }
                                 })
                                 .error(function(data, status) {

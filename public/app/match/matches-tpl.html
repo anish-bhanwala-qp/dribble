@@ -1,20 +1,18 @@
-<div class="container-fluid">
-    <div>
-        <div class="well" ng-repeat="date in data.matchDates | orderBy:'-getTime()'">
-            <div class="row">
-                <div class="col-xs-12">
-                    <h4>{{date.toDateString()}}</h4>
-                </div>
-            </div>
-            <div class="row" ng-repeat="match in data.matches | dateFilter:date">
-                <div class="col-sm-4 col-md-4 col-lg-4 text-center col-xs-4">{{match.team1Name}}</div>
-                <div class="col-sm-4 col-md-4 col-lg-4 text-center col-xs-4">
+<div class="container-fluid" style="max-width: 700px;">
+    <div class="panel panel-primary" ng-repeat="date in data.matchDates | orderBy:'-getTime()'">
+        <table class="table table-condensed table-striped">
+            <tr class="info">
+                <td colspan="3"><h4>{{date.toDateString()}}</h4></td>
+            </tr>
+            <tr ng-repeat="match in data.matches | dateFilter:date">
+                <td width="33%" class="text-left">{{match.team1Name}}</td>
+                <td width="33%" class="text-center">
                     {{match.status == 'Over' ? (match.team1Score + ' - ' + match.team2Score) : (match.matchDateTime | formatParseDate)}}
-                </div>
-                <div class="col-sm-4 col-md-4 col-lg-4 text-center col-xs-4">
+                </td>
+                <td width="33%" class="text-right">
                     {{match.team2Name}}
-                </div>
-            </div>
-        </div>
+                </td>
+            </tr>
+        </table>
     </div>
 </div>
