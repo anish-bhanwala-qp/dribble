@@ -27,6 +27,7 @@
                 $scope.users;
                 $scope.data = {
                     eventType: 'Goals',
+                    matchFilter: 'Scheduled',
                     selectedMatchDate: {},
                     selectedMatchGuests: [],
                     selectedMatchLineups: [],
@@ -352,11 +353,21 @@
                         var found = false;
                         for (var i=0; i < $scope.data.matchDates.length; i++) {
                             if ($scope.data.matchDates[i].getTime() == match.dateOnly.getTime()) {
+                                if (match.status == 'Scheduled') {
+                                    $scope.data.matchDates[i].hasScheduled = 'hasScheduled';
+                                } else {
+                                    $scope.data.matchDates[i].hasOver = 'hasOver';
+                                }
                                 found = true;
                                 break;
                             }
                         }
                         if (!found) {
+                            if (match.status == 'Scheduled') {
+                                match.dateOnly.hasScheduled = 'hasScheduled';
+                            } else {
+                                match.dateOnly.hasOver = 'hasOver';
+                            }
                             $scope.data.matchDates.push(match.dateOnly);
                         }
                         angular.forEach(teams, function(team) {

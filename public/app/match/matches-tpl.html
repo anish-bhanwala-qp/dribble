@@ -1,10 +1,15 @@
-<div class="container-fluid" style="max-width: 700px;">
-    <div class="panel panel-primary" ng-repeat="date in data.matchDates | orderBy:'-getTime()'">
+<div class="container-fluid" style="max-width: 700px; padding-left: 0px; padding-right: 0px;">
+    <select class="form-control input-sm" ng-model="data.matchFilter">
+        <option value="Scheduled">Fixtures</option>
+        <option value="Over">Results</option>
+    </select>
+    <hr>
+    <div class="panel panel-primary" ng-repeat="date in data.matchDates | filter:('has'+data.matchFilter) | orderBy:'getTime()':(data.matchFilter == 'Over')">
         <table class="table table-condensed table-striped">
             <tr class="info">
                 <td colspan="3"><h4>{{date.toDateString().replace('2015','')}}</h4></td>
             </tr>
-            <tr ng-repeat="match in data.matches | dateFilter:date">
+            <tr ng-repeat="match in data.matches  | filter:{'status': data.matchFilter} | dateFilter:date">
                 <td width="33%" class="text-left">
                     {{match.team1Name}}
                     <div ng-if="match.events.length > 0">
