@@ -26,6 +26,7 @@
                     $scope.user;
                     $scope.guestError = false;
                     $scope.data = {
+                        eventType: 'Goals',
                         matchDates: [],
                         tournament: {},
                         groups: [],

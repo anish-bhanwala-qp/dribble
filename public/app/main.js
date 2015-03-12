@@ -24,6 +24,7 @@
             function($scope, $modal, tournamentService, toaster, tableService) {
                 $scope.tournaments;
                 $scope.data = {
+                    eventType: 'Goals',
                     matchDates: [],
                     tournament: {},
                     groups: [],

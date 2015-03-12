@@ -26,6 +26,7 @@
                 $scope.tournaments;
                 $scope.users;
                 $scope.data = {
+                    eventType: 'Goals',
                     selectedMatchDate: {},
                     selectedMatchGuests: [],
                     selectedMatchLineups: [],
