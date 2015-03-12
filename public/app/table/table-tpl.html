@@ -1,4 +1,12 @@
-<div class="container-fluid">
+<div>
+    <div class="text-right">
+        <button type="button" class="btn btn-xs btn-success" ng-click="detailedView = !detailedView">
+            <i class="fa fa-lg" ng-class="{'fa-list': !detailedView, 'fa-list-alt': detailedView}">
+                {{detailedView ? 'Compact View': 'Detailed View'}}
+            </i>
+        </button>
+    </div>
+    <hr>
     <div class="panel panel-info" ng-repeat="group in data.groups">
         <div class="panel-heading">
             <div class="panel-title text-center">
@@ -9,14 +17,14 @@
             <table class="table table-striped table-condensed">
                 <thead>
                 <tr class="active">
-                    <th>#</th>
-                    <th>Team</th>
+                    <th width="5%">#</th>
+                    <th width="30%">Team</th>
                     <th>GP</th>
-                    <th>W</th>
-                    <th>L</th>
-                    <th>D</th>
-                    <th>GF</th>
-                    <th>GA</th>
+                    <th ng-if="detailedView">W</th>
+                    <th ng-if="detailedView">L</th>
+                    <th ng-if="detailedView">D</th>
+                    <th ng-if="detailedView">GF</th>
+                    <th ng-if="detailedView">GA</th>
                     <th>GD</th>
                     <th>PTS</th>
                 </tr>
@@ -27,11 +35,11 @@
                     <td>{{$index + 1}}</td>
                     <td>{{teamStats.team.name}}</td>
                     <td>{{teamStats.matchPlayed}}</td>
-                    <td>{{teamStats.won}}</td>
-                    <td>{{teamStats.lost}}</td>
-                    <td>{{teamStats.draw}}</td>
-                    <td>{{teamStats.goalFor}}</td>
-                    <td>{{teamStats.goalAgainst}}</td>
+                    <td ng-if="detailedView">{{teamStats.won}}</td>
+                    <td ng-if="detailedView">{{teamStats.lost}}</td>
+                    <td ng-if="detailedView">{{teamStats.draw}}</td>
+                    <td ng-if="detailedView">{{teamStats.goalFor}}</td>
+                    <td ng-if="detailedView">{{teamStats.goalAgainst}}</td>
                     <td>{{teamStats.goalDifference}}</td>
                     <td>{{teamStats.points}}</td>
                 </tr>
