@@ -60,7 +60,7 @@
                         matchDateTime: new Date()
                     };
                     $scope.players;
-                    $scope.types = ['Yellow Card', 'Red Card', 'Goal', 'Self Goal'];
+                    $scope.types = ['Yellow Card', 'Red Card', 'Goal', 'Self Goal', 'Penalty'];
                     $scope.submitted = false;
                     $scope.scores = [0,1,2,3,4,5,6,7,8,9,10];
                     $scope.minutes = [];

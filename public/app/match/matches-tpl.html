@@ -1,15 +1,15 @@
 <div class="container-fluid" style="max-width: 700px; padding-left: 0px; padding-right: 0px;">
-    <select class="form-control input-sm" ng-model="data.matchFilter">
+    <select class="form-control input-sm" ng-model="data.matchFilter" style="margin-bottom: 10px;">
         <option value="Scheduled">Fixtures</option>
         <option value="Over">Results</option>
     </select>
-    <hr>
+
     <div class="panel panel-primary" ng-repeat="date in data.matchDates | filter:('has'+data.matchFilter) | orderBy:'getTime()':(data.matchFilter == 'Over')">
         <table class="table table-condensed table-striped">
             <tr class="info">
                 <td colspan="3"><h4>{{date.toDateString().replace('2015','')}}</h4></td>
             </tr>
-            <tr ng-repeat="match in data.matches  | filter:{'status': data.matchFilter} | dateFilter:date">
+            <tr ng-repeat="match in data.matches  | filter:{'status': data.matchFilter} | dateFilter:date | orderBy:'matchDateTime'">
                 <td width="33%" class="text-left">
                     {{match.team1Name}}
                     <div ng-if="match.events.length > 0">
@@ -18,17 +18,19 @@
                                 <span ng-switch on="event.type">
                                     <i class="fa fa-futbol-o" ng-switch-when="Goal"></i>
                                     <i class="fa fa-futbol-o" ng-switch-when="Self Goal"></i>
+                                    <i class="fa fa-futbol-o" ng-switch-when="Penalty"></i>
                                     <i class="fa fa-square" style="color: #EAE24E;" ng-switch-when="Yellow Card"></i>
                                     <i class="fa fa-square" style="color: #BD1010;" ng-switch-when="Red Card"></i>
                                 </span>
                                 {{event.playerName}} {{event.time}}'
-                                <span ng-if="event.type == 'Self Goal'">(Own Goal)</span>
+                                <span ng-if="event.type == 'Self Goal'">(OG)</span>
+                                <span ng-if="event.type == 'Penalty'">(P)</span>
                             </small>
                         </div>
                     </div>
                 </td>
                 <td width="33%" class="text-center">
-                    {{match.status == 'Over' ? (match.team1Score + ' - ' + match.team2Score) : (match.matchDateTime | formatParseDate)}}
+                    <b>{{match.status == 'Over' ? (match.team1Score + ' - ' + match.team2Score) : (match.matchDateTime | formatParseDate)}}</b>
                 </td>
                 <td width="33%" class="text-right">
                     {{match.team2Name}}
@@ -36,7 +38,8 @@
                         <div ng-repeat="event in match.events | filter:match.team2Id.objectId">
                             <small>
                                 {{event.time}}'
-                                <span ng-if="event.type == 'Self Goal'">(Own Goal)</span>
+                                <span ng-if="event.type == 'Self Goal'">(OG)</span>
+                                <span ng-if="event.type == 'Penalty'">(P)</span>
                                 {{event.playerName}}
                                 <span ng-switch on="event.type">
                                     <i class="fa fa-futbol-o" ng-switch-when="Goal"></i>
