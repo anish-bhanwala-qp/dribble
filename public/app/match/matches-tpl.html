@@ -10,12 +10,12 @@
                     <div ng-if="match.events.length > 0">
                         <div ng-repeat="event in match.events | filter:match.team1Id.objectId">
                             <small>
-                                {{event.playerName}}
                                 <span ng-switch on="event.type">
                                     <i class="fa fa-futbol-o" ng-switch-when="Goal"></i>
                                     <i class="fa fa-square" style="color: #EAE24E;" ng-switch-when="Yellow Card"></i>
                                     <i class="fa fa-square" style="color: #BD1010;" ng-switch-when="Red Card"></i>
                                 </span>
+                                {{event.playerName}}
                             </small>
                         </div>
                     </div>
