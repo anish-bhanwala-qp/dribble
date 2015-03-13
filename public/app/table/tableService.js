@@ -53,8 +53,48 @@
                         }
                     }
 
+                    //User team1, team2 in order to change sort order
+                    table.sort(function (team2, team1) {
+                        if (team1.points != team2.points) {
+                            return team1.points - team2.points;
+                        }
+                        if (team1.goalDifference != team2.goalDifference) {
+                            return team1.goalDifference - team2.goalDifference;
+                        }
+                        if (team1.goalFor != team2.goalFor) {
+                            return team1.goalFor - team2.goalFor;
+                        }
+                        if (team1.goalAgainst != team2.goalAgainst) {
+                            return team1.goalAgainst - team2.goalAgainst;
+                        }
+
+                        //now we need to check head to head
+                        for (var i=0; i < data.matches.length; i++) {
+                            var match = data.matches[i];
+                            if (match.status == 'Over') {
+                                if ((match.team1Id.objectId == team1.team.objectId
+                                    && match.team2Id.objectId == team2.team.objectId)) {
+                                    return match.team1Score - match.team2Score;
+                                } else if (match.team1Id.objectId == team2.team.objectId
+                                    && match.team2Id.objectId == team1.team.objectId) {
+                                    return match.team2Score - match.team1Score;
+                                }
+                            }
+                        }
+                        //sort by name
+                        if (team1.team.name < team2.team.name) {
+                            return -1;
+                        } else if (team1.team.name > team2.team.name) {
+                            return 1;
+                        } else {
+                            return 0;
+                        }
+                    });
+
+
                     return table;
                 }
+
 
                 function calculateStats(events, data) {
                     var consolidatedEvents = [];

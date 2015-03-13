@@ -31,7 +31,7 @@
                 </thead>
 
                 <tbody>
-                <tr ng-repeat="teamStats in data.table | filter:group.objectId | orderBy: ['points', 'goalDifference', 'goalFor', 'goalAgainst']: true">
+                <tr ng-repeat="teamStats in data.table | filter:group.objectId">
                     <td>{{$index + 1}}</td>
                     <td>{{teamStats.team.name}}</td>
                     <td>{{teamStats.matchPlayed}}</td>
