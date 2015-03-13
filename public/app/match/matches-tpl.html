@@ -4,15 +4,16 @@
         <option value="Over">Results</option>
     </select>
 
-    <div class="panel panel-primary" ng-repeat="date in data.matchDates | filter:('has'+data.matchFilter) | orderBy:'getTime()':(data.matchFilter == 'Over')">
+    <div class="panel panel-primary table-panel"
+         ng-repeat="date in data.matchDates | filter:('has'+data.matchFilter) | orderBy:'getTime()':(data.matchFilter == 'Over')">
         <table class="table table-condensed table-striped">
             <tr class="info">
                 <td colspan="3"><h4>{{date.toDateString().replace('2015','')}}</h4></td>
             </tr>
             <tr ng-repeat="match in data.matches  | filter:{'status': data.matchFilter} | dateFilter:date | orderBy:'matchDateTime'">
                 <td width="33%" class="text-left">
-                    {{match.team1Name}}
-                    <div ng-if="match.events.length > 0">
+                    <span class="match-name">{{match.team1Name}}</span>
+                    <div ng-if="match.events.length > 0" class="match-events-left">
                         <div ng-repeat="event in match.events | filter:match.team1Id.objectId">
                             <small ng-if="event.type != 'Self Goal'">
                                 <span ng-switch on="event.type">
@@ -26,7 +27,7 @@
                             </small>
                         </div>
                     </div>
-                    <div ng-if="match.events.length > 0">
+                    <div ng-if="match.events.length > 0" class="match-events-left">
                         <div ng-repeat="event in match.events | filter:match.team2Id.objectId">
                             <small ng-if="event.type == 'Self Goal'">
                                 <i class="fa fa-futbol-o"></i>
@@ -36,11 +37,18 @@
                     </div>
                 </td>
                 <td width="33%" class="text-center">
-                    <b>{{match.status == 'Over' ? (match.team1Score + ' - ' + match.team2Score) : (match.matchDateTime | formatParseDate)}}</b>
+                    <h3 ng-if="match.status == 'Over'" style="margin-top: 3px;">
+                        <span class="label label-default">
+                            {{match.team1Score + ' - ' + match.team2Score}}
+                        </span>
+                    </h3>
+                    <span ng-if="match.status != 'Over'" class="match-time-or-score">
+                        {{match.matchDateTime | formatParseDate}}
+                    </span>
                 </td>
                 <td width="33%" class="text-right">
-                    {{match.team2Name}}
-                    <div ng-if="match.events.length > 0">
+                    <span class="match-name">{{match.team2Name}}</span>
+                    <div ng-if="match.events.length > 0" class="match-events-right">
                         <div ng-repeat="event in match.events | filter:match.team2Id.objectId">
                             <small ng-if="event.type != 'Self Goal'">
                                 {{event.time}}'
@@ -54,7 +62,7 @@
                             </small>
                         </div>
                     </div>
-                    <div ng-if="match.events.length > 0">
+                    <div ng-if="match.events.length > 0" class="match-events-right">
                         <div ng-repeat="event in match.events | filter:match.team1Id.objectId">
                             <small ng-if="event.type == 'Self Goal'">
                                 <i class="fa fa-futbol-o"></i>
@@ -67,3 +75,15 @@
         </table>
     </div>
 </div>
+
+<style>
+    .table-panel small {
+        color: #777;
+    }
+    .table-panel .match-name {
+        font-size: 17px;
+    }
+    .table-panel .match-time-or-score {
+        font-size: 20px;
+    }
+</style>
