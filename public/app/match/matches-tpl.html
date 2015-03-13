@@ -14,17 +14,23 @@
                     {{match.team1Name}}
                     <div ng-if="match.events.length > 0">
                         <div ng-repeat="event in match.events | filter:match.team1Id.objectId">
-                            <small>
+                            <small ng-if="event.type != 'Self Goal'">
                                 <span ng-switch on="event.type">
                                     <i class="fa fa-futbol-o" ng-switch-when="Goal"></i>
-                                    <i class="fa fa-futbol-o" ng-switch-when="Self Goal"></i>
                                     <i class="fa fa-futbol-o" ng-switch-when="Penalty"></i>
                                     <i class="fa fa-square" style="color: #EAE24E;" ng-switch-when="Yellow Card"></i>
                                     <i class="fa fa-square" style="color: #BD1010;" ng-switch-when="Red Card"></i>
                                 </span>
                                 {{event.playerName}} {{event.time}}'
-                                <span ng-if="event.type == 'Self Goal'">(OG)</span>
                                 <span ng-if="event.type == 'Penalty'">(P)</span>
+                            </small>
+                        </div>
+                    </div>
+                    <div ng-if="match.events.length > 0">
+                        <div ng-repeat="event in match.events | filter:match.team2Id.objectId">
+                            <small ng-if="event.type == 'Self Goal'">
+                                <i class="fa fa-futbol-o"></i>
+                                {{event.playerName}} {{event.time}}' (OG)
                             </small>
                         </div>
                     </div>
@@ -36,17 +42,23 @@
                     {{match.team2Name}}
                     <div ng-if="match.events.length > 0">
                         <div ng-repeat="event in match.events | filter:match.team2Id.objectId">
-                            <small>
+                            <small ng-if="event.type != 'Self Goal'">
                                 {{event.time}}'
-                                <span ng-if="event.type == 'Self Goal'">(OG)</span>
                                 <span ng-if="event.type == 'Penalty'">(P)</span>
                                 {{event.playerName}}
                                 <span ng-switch on="event.type">
                                     <i class="fa fa-futbol-o" ng-switch-when="Goal"></i>
-                                    <i class="fa fa-futbol-o" ng-switch-when="Self Goal"></i>
                                     <i class="fa fa-square" style="color: #EAE24E;" ng-switch-when="Yellow Card"></i>
                                     <i class="fa fa-square" style="color: #BD1010;" ng-switch-when="Red Card"></i>
                                 </span>
+                            </small>
+                        </div>
+                    </div>
+                    <div ng-if="match.events.length > 0">
+                        <div ng-repeat="event in match.events | filter:match.team1Id.objectId">
+                            <small ng-if="event.type == 'Self Goal'">
+                                <i class="fa fa-futbol-o"></i>
+                                {{event.playerName}} {{event.time}}' (OG)
                             </small>
                         </div>
                     </div>
