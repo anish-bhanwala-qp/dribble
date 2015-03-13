@@ -64,9 +64,9 @@
                         if (team1.goalFor != team2.goalFor) {
                             return team1.goalFor - team2.goalFor;
                         }
-                        if (team1.goalAgainst != team2.goalAgainst) {
+                        /*if (team1.goalAgainst != team2.goalAgainst) {
                             return team1.goalAgainst - team2.goalAgainst;
-                        }
+                        }*/
 
                         //now we need to check head to head
                         for (var i=0; i < data.matches.length; i++) {
