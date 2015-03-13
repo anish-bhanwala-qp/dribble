@@ -42,11 +42,11 @@
     <script src="app/table/tableService.js"></script>
     <script src="app/tournament/tournamentService.js"></script>
 </head>
-<body ng-controller="MainController" style="padding-top: 75px; overflow-y: hidden;">
+<body ng-controller="MainController" style="padding-top: 75px;">
 
 <db-navbar is-captain="true"></db-navbar>
 
-<div class="main-container pre-scrollable">
+<div class="main-container">
     <div class="container-fluid" ui-view></div>
 </div>
 
@@ -246,12 +246,5 @@
     </form>
 </script>
 
-<script>
-    $(document).ready(function(){
-        $(window).on('resize', function(){
-            $('.main-container').css('max-height', $(window).height() - 70 + 'px');
-        }).resize()
-    });
-</script>
 </body>
 </html>

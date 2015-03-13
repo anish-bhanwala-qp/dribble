@@ -14,7 +14,7 @@
                 <td width="33%" class="text-left">
                     <span class="match-name">{{match.team1Name}}</span>
                     <div ng-if="match.events.length > 0" class="match-events-left">
-                        <div ng-repeat="event in match.events | filter:match.team1Id.objectId">
+                        <div ng-repeat="event in match.events | filter:match.team1Id.objectId | orderBy:'time'">
                             <small ng-if="event.type != 'Self Goal'">
                                 <span ng-switch on="event.type">
                                     <i class="fa fa-futbol-o" ng-switch-when="Goal"></i>
@@ -54,7 +54,7 @@
                 <td width="33%" class="text-right">
                     <span class="match-name">{{match.team2Name}}</span>
                     <div ng-if="match.events.length > 0" class="match-events-right">
-                        <div ng-repeat="event in match.events | filter:match.team2Id.objectId">
+                        <div ng-repeat="event in match.events | filter:match.team2Id.objectId | orderBy:'time'">
                             <small ng-if="event.type != 'Self Goal'">
                                 {{event.time}}'
                                 <span ng-if="event.type == 'Penalty'">(P)</span>

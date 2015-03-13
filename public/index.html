@@ -41,25 +41,17 @@
     <script src="app/table/tableService.js"></script>
     <script src="app/tournament/tournamentService.js"></script>
 </head>
-<body ng-controller="MainController" style="padding-top: 75px; overflow-y: hidden;">
+<body ng-controller="MainController" style="padding-top: 75px;">
 
 <db-navbar sign-in-callback="showSignIn()"></db-navbar>
 
-<div class="main-container pre-scrollable">
+<div class="main-container">
     <div class="container-fluid" ui-view></div>
 </div>
 
 
 <div cg-busy="myPromise"></div>
 <toaster-container></toaster-container>
-
-<script>
-    $(document).ready(function() {
-        $(window).on('resize', function(){
-            $('.main-container').css('max-height', $(window).height() + 'px');
-        }).resize()
-    });
-</script>
 
 </body>
 </html>
