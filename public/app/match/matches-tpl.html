@@ -42,9 +42,14 @@
                             {{match.team1Score + ' - ' + match.team2Score}}
                         </span>
                     </h3>
-                    <span ng-if="match.status != 'Over'" class="match-time-or-score">
+                    <div ng-if="match.status != 'Over'" class="match-time-or-score">
                         {{match.matchDateTime | formatParseDate}}
-                    </span>
+                        <div ng-switch on="match.stage" style="font-size: 16px;">
+                            <b ng-switch-when="SemiFinal"><i>(Semi Final)</i></b>
+                            <b ng-switch-when="QuarterFinal"><i>(Quarter Final)</i></b>
+                            <b ng-switch-when="Final"><i>(Final)</i></b>
+                        </div>
+                    </div>
                 </td>
                 <td width="33%" class="text-right">
                     <span class="match-name">{{match.team2Name}}</span>
