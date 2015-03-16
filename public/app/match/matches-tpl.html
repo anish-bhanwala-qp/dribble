@@ -10,7 +10,7 @@
             <tr class="info">
                 <td colspan="3"><h4>{{date.toDateString().replace('2015','')}}</h4></td>
             </tr>
-            <tr ng-repeat="match in data.matches  | filter:{'status': data.matchFilter} | dateFilter:date | orderBy:'matchDateTime'">
+            <tr ng-repeat="match in data.matches  | filter:{'status': data.matchFilter} | dateFilter:date | orderBy:['dateWithTime']">
                 <td width="33%" class="text-left">
                     <span class="match-name">{{match.team1Name}}</span>
                     <div ng-if="match.events.length > 0" class="match-events-left">

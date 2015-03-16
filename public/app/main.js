@@ -60,14 +60,14 @@
                                                 populateMatchEvents($scope.data.matches, data.result.matchEvents);
                                             })
                                             .error(function(error) {
-                                                toaster.put('error', 'Error occurred while loading data');
+                                                toaster.pop('error', 'Error occurred while loading data');
                                             });
                                         break;
                                     }
                                 }
                             }
                         }).error(function(data) {
-                            toaster.put('error', 'Error occurred while loading data');
+                            toaster.pop('error', 'Error occurred while loading data');
                         });
                 }
 
@@ -95,6 +95,7 @@
                     angular.forEach(matches, function(match) {
                         match.dateTime = new Date(match.matchDateTime.iso);
                         var dateTemp = new Date(match.matchDateTime.iso);
+                        match.dateWithTime = dateTemp.getTime();
                         dateTemp.setHours(0,0,0,0);
                         match.dateOnly = dateTemp;
                         var found = false;

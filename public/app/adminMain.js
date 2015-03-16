@@ -353,6 +353,7 @@
                     angular.forEach(matches, function(match) {
                         match.dateTime = new Date(match.matchDateTime.iso);
                         var dateTemp = new Date(match.matchDateTime.iso);
+                        match.dateWithTime = dateTemp.getTime();
                         dateTemp.setHours(0,0,0,0);
                         match.dateOnly = dateTemp;
                         var found = false;
