@@ -62,6 +62,7 @@
                                         if (tournament.isCurrent) {
                                             $scope.data.tournament = tournament;
                                             $scope.tournamentSelected();
+                                            break;
                                         }
                                     }
                                 }

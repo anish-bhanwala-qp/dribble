@@ -46,25 +46,25 @@
                                     var tournament = $scope.tournaments[i];
                                     if (tournament.isCurrent) {
                                         $scope.data.tournament = tournament;
-                                        $scope.tournamentSelected();
+                                        tournamentService.getData($scope.data.tournament)
+                                            .success(function(data) {
+                                                updateArray($scope.data.groups, data.result.groups);
+                                                updateArray($scope.data.teams, data.result.teams);
+                                                updateArray($scope.data.matches, data.result.matches);
+                                                updateArray($scope.data.players, data.result.players);
+                                                populateTeamNames($scope.data.matches, $scope.data.teams);
+                                                updateArray($scope.data.table, tableService.calculateTable($scope.data));
+                                                updateArray($scope.data.consolidatedMatchEvents,
+                                                    tableService.calculateStats(data.result.matchEvents, $scope.data));
+                                                populateMatchEventsPlayerNames(data.result.matchEvents, data.result.players);
+                                                populateMatchEvents($scope.data.matches, data.result.matchEvents);
+                                            })
+                                            .error(function(error) {
+                                                toaster.put('error', 'Error occurred while loading data');
+                                            });
+                                        break;
                                     }
                                 }
-                                tournamentService.getData($scope.data.tournament)
-                                    .success(function(data) {
-                                        updateArray($scope.data.groups, data.result.groups);
-                                        updateArray($scope.data.teams, data.result.teams);
-                                        updateArray($scope.data.matches, data.result.matches);
-                                        updateArray($scope.data.players, data.result.players);
-                                        populateTeamNames($scope.data.matches, $scope.data.teams);
-                                        updateArray($scope.data.table, tableService.calculateTable($scope.data));
-                                        updateArray($scope.data.consolidatedMatchEvents,
-                                            tableService.calculateStats(data.result.matchEvents, $scope.data));
-                                        populateMatchEventsPlayerNames(data.result.matchEvents, data.result.players);
-                                        populateMatchEvents($scope.data.matches, data.result.matchEvents);
-                                    })
-                                    .error(function(error) {
-                                        toaster.put('error', 'Error occurred while loading data');
-                                    });
                             }
                         }).error(function(data) {
                             toaster.put('error', 'Error occurred while loading data');
