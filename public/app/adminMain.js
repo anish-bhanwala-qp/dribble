@@ -51,8 +51,13 @@
                             console.log(data);
                             $scope.tournaments = data.result;
                             if ($scope.tournaments.length > 0) {
-                                $scope.data.tournament = $scope.tournaments[0];
-                                $scope.tournamentSelected();
+                                for (var i=0; i < $scope.tournaments.length; i++) {
+                                    var tournament = $scope.tournaments[i];
+                                    if (tournament.isCurrent) {
+                                        $scope.data.tournament = tournament;
+                                        $scope.tournamentSelected();
+                                    }
+                                }
                             }
                         }).error(function(data) {
                             console.log(data);
