@@ -74,18 +74,22 @@
                             if (match.status == 'Over') {
                                 if ((match.team1Id.objectId == team1.team.objectId
                                     && match.team2Id.objectId == team2.team.objectId)) {
-                                    return match.team1Score - match.team2Score;
+                                    if (match.team1Score != match.team2Score) {
+                                        return match.team1Score - match.team2Score;
+                                    }
                                 } else if (match.team1Id.objectId == team2.team.objectId
                                     && match.team2Id.objectId == team1.team.objectId) {
-                                    return match.team2Score - match.team1Score;
+                                    if (match.team2Score != match.team1Score) {
+                                        return match.team2Score - match.team1Score
+                                    }
                                 }
                             }
                         }
                         //sort by name
                         if (team1.team.name < team2.team.name) {
-                            return -1;
-                        } else if (team1.team.name > team2.team.name) {
                             return 1;
+                        } else if (team1.team.name > team2.team.name) {
+                            return -1;
                         } else {
                             return 0;
                         }
