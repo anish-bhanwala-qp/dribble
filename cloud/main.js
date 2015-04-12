@@ -696,10 +696,12 @@ Parse.Cloud.define("tournamentDetails", function(request, response) {
                             queryMatch.find({
                                 success: function(matches) {
                                     var queryPlayer = new Parse.Query(Parse.Object.extend("Player"));
+                                    queryPlayer.limit(1000);
                                     queryPlayer.equalTo("tournamentId", tournament);
                                     queryPlayer.find({
                                         success: function(players) {
                                             var queryEvents = new Parse.Query(Parse.Object.extend("MatchEvent"));
+                                            queryEvents.limit(1000);
                                             queryEvents.equalTo("tournamentId", tournament);
                                             queryEvents.find({
                                                 success: function(events) {
@@ -760,10 +762,12 @@ Parse.Cloud.define("adminTournamentDetails", function(request, response) {
                                     success: function(matches) {
                                         var queryPlayer = new Parse.Query(Parse.Object.extend("Player"));
                                         queryPlayer.equalTo("tournamentId", tournament);
+                                        queryPlayer.limit(1000);
                                         queryPlayer.find({
                                             success: function(players) {
                                                 var queryMatchEvent = new Parse.Query(Parse.Object.extend("MatchEvent"));
                                                 queryMatchEvent.equalTo("tournamentId", tournament);
+                                                queryEvents.limit(1000);
                                                 queryMatchEvent.find({
                                                     success: function(events) {
                                                         response.success({
