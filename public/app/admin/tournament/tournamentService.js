@@ -193,6 +193,20 @@
                     return $rootScope.myPromise;
                 }
 
+                function deleteMatchEvent(matchEvent) {
+                    $rootScope.myPromise = $http({
+                        method: "post",
+                        url: APP_CONSTANTS.apiUrl + 'functions/deleteMatchEvent',
+                        data: {
+                            matchEventId: matchEvent.objectId
+                        },
+                        headers: {
+                            'X-Parse-Session-Token' : userService.token()
+                        }
+                    });
+                    return $rootScope.myPromise;
+                }
+
                 // Return public API.
                 return {
                     getAll: getAll,
@@ -206,7 +220,8 @@
                     getAllUsers: getAllUsers,
                     addUser: addUser,
                     getMatchGuestsForMatches: getMatchGuestsForMatches,
-                    getMatchLineupsForMatches: getMatchLineupsForMatches
+                    getMatchLineupsForMatches: getMatchLineupsForMatches,
+                    deleteMatchEvent: deleteMatchEvent
                 };
             }]);
 })();

@@ -4,12 +4,14 @@ Parse.Cloud.define("hello", function(request, response) {
 
 Parse.Cloud.define("deleteMatchEvent", function(request, response) {
     if (Parse.User.current()) {
-        Parse.Object.destroyAll(request.params.matchEvent, {
-            success: function(data) {
-                response.success(data);
-            },
-            error: function(obj, error) {
-                response.error(error);
+        var queryMatchEvent = new Parse.Query(Parse.Object.extend("MatchEvent"));
+        queryMatchEvent.equalTo("objectId", request.params.matchEventId);
+        queryMatchEvent.find({
+            success: function(events) {
+                events[0].destroy();
+                response.success('Match Event deleted');
+            }, error: function(obj, error) {
+                response.error("Error fetching Match Event");
             }
         });
     } else {

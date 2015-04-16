@@ -139,7 +139,21 @@
                             if ($scope.match.matchEvents[index]) {
                                 var myEvent = $scope.match.matchEvents[index];
                                 if (myEvent.objectId) {
-                                    //delete from db
+                                    tournamentService.deleteMatchEvent(myEvent)
+                                        .success(function(data, status) {
+                                            $scope.match.matchEvents.splice(index, 1);
+                                            for (var i=0; i < matchEvents.length; i++) {
+                                                if (matchEvents[i].objectId == myEvent.objectId) {
+                                                    matchEvents.splice(i, 1);
+                                                    break;
+                                                }
+                                            }
+                                            toaster.pop('success', 'Match Event deleted successfully!');
+                                        })
+                                        .error(function(data, status) {
+                                            toaster.pop('error', data.error);
+                                            $modalInstance.dismiss('cancel');
+                                        });
                                 } else {
                                     $scope.match.matchEvents.splice(index, 1);
                                 }
