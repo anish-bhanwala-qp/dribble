@@ -767,7 +767,7 @@ Parse.Cloud.define("adminTournamentDetails", function(request, response) {
                                             success: function(players) {
                                                 var queryMatchEvent = new Parse.Query(Parse.Object.extend("MatchEvent"));
                                                 queryMatchEvent.equalTo("tournamentId", tournament);
-                                                queryEvents.limit(1000);
+                                                queryMatchEvent.limit(1000);
                                                 queryMatchEvent.find({
                                                     success: function(events) {
                                                         response.success({
