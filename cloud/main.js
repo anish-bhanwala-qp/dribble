@@ -489,6 +489,7 @@ Parse.Cloud.define("editMatch", function(request, response) {
                     match.set("stage", request.params.stage);
                     match.set("status", request.params.status);
                     match.set("matchDateTime", new Date(request.params.matchDateTime));
+                    match.set("message", request.params.message);
                     match.save();
                     response.success(match);
                 },

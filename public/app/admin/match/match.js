@@ -85,7 +85,8 @@
                                     $scope.match.team2Score,
                                     $scope.match.matchDateTime.getTime(),
                                     $scope.match.stage,
-                                    $scope.match.status)
+                                    $scope.match.status,
+                                    $scope.match.message)
                                 .success(function(data, status) {
                                     if ($scope.match.matchEvents.length > 0) {
                                         angular.forEach($scope.match.matchEvents, function(event){

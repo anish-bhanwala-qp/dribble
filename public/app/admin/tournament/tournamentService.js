@@ -78,7 +78,7 @@
                     return $rootScope.myPromise;
                 }
 
-                function editMatch(objectId, team1Score, team2Score, dateTime, stage, status) {
+                function editMatch(objectId, team1Score, team2Score, dateTime, stage, status, message) {
                     return $http({
                         method: "post",
                         url: APP_CONSTANTS.apiUrl + 'functions/editMatch',
@@ -88,7 +88,8 @@
                             team2Score: team2Score,
                             matchDateTime: dateTime,
                             stage: stage,
-                            status: status
+                            status: status,
+                            message: message
                         },
                         headers: {
                             'X-Parse-Session-Token' : userService.token()
