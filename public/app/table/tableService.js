@@ -19,7 +19,7 @@
                             var goalFor = 0;
                             var goalAgainst = 0;
                             angular.forEach(data.matches, function(match) {
-                                if (match.status == 'Over') {
+                                if (match.status == 'Over' && match.stage == 'Group') {
                                     if (match.team1Id.objectId == team.objectId) {
                                         matchPlayed++;
                                         goalFor += match.team1Score;
