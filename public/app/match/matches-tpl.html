@@ -45,11 +45,11 @@
                     </h3>
                     <div ng-if="match.status != 'Over'" class="match-time-or-score">
                         {{match.matchDateTime | formatParseDate}}
-                        <div ng-switch on="match.stage" style="font-size: 16px;">
-                            <b ng-switch-when="SemiFinal"><i>(Semi Final)</i></b>
-                            <b ng-switch-when="QuarterFinal"><i>(Quarter Final)</i></b>
-                            <b ng-switch-when="Final"><i>(Final)</i></b>
-                        </div>
+                    </div>
+                    <div ng-switch on="match.stage" style="font-size: 16px;">
+                        <b ng-switch-when="SemiFinal"><i>(Semi Final)</i></b>
+                        <b ng-switch-when="QuarterFinal"><i>(Quarter Final)</i></b>
+                        <b ng-switch-when="Final"><i>(Final)</i></b>
                     </div>
                 </td>
                 <td width="33%" class="text-right">
